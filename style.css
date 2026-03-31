@@ -5,18 +5,16 @@
 }
 
 :root {
-  --bg-1: #f4efe8;
-  --bg-2: #ece3d6;
-  --panel: rgba(255, 250, 244, 0.92);
-  --panel-strong: #fffaf4;
-  --line: #d8c8b3;
-  --text: #2c2118;
-  --muted: #6e5b4b;
-  --accent: #7a4b2a;
-  --accent-dark: #59341c;
-  --accent-soft: #efe3d4;
-  --gold-soft: #d9b98b;
-  --shadow: 0 18px 40px rgba(64, 40, 20, 0.12);
+  --bg-1: #eef8f7;
+  --bg-2: #dff1ee;
+  --panel: rgba(248, 255, 254, 0.92);
+  --line: #b8ddd6;
+  --text: #153532;
+  --muted: #4d716d;
+  --accent: #0f766e;
+  --accent-dark: #0b5b55;
+  --accent-soft: #dff3ef;
+  --shadow: 0 18px 40px rgba(16, 72, 68, 0.12);
   --radius-xl: 30px;
   --radius-lg: 22px;
   --radius-md: 16px;
@@ -26,8 +24,8 @@ body {
   font-family: Georgia, "Times New Roman", serif;
   color: var(--text);
   background:
-    radial-gradient(circle at top left, rgba(122, 75, 42, 0.14), transparent 26%),
-    radial-gradient(circle at bottom right, rgba(217, 185, 139, 0.22), transparent 20%),
+    radial-gradient(circle at top left, rgba(15, 118, 110, 0.14), transparent 26%),
+    radial-gradient(circle at bottom right, rgba(111, 207, 189, 0.24), transparent 20%),
     linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
   min-height: 100vh;
 }
@@ -39,8 +37,7 @@ body {
 }
 
 .hero {
-  background:
-    linear-gradient(135deg, rgba(255, 251, 246, 0.96) 0%, rgba(245, 236, 225, 0.94) 100%);
+  background: linear-gradient(135deg, rgba(251, 255, 254, 0.96) 0%, rgba(237, 248, 246, 0.95) 100%);
   border: 1px solid var(--line);
   border-radius: 34px;
   padding: 26px;
@@ -56,7 +53,7 @@ body {
   inset: auto -40px -60px auto;
   width: 220px;
   height: 220px;
-  background: radial-gradient(circle, rgba(122, 75, 42, 0.08), transparent 70%);
+  background: radial-gradient(circle, rgba(15, 118, 110, 0.08), transparent 70%);
   pointer-events: none;
 }
 
@@ -80,14 +77,14 @@ body {
 .logo-card {
   width: 176px;
   height: 88px;
-  background: rgba(255, 252, 247, 0.95);
+  background: rgba(251, 255, 254, 0.95);
   border: 1px solid var(--line);
   border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 12px 14px;
-  box-shadow: 0 8px 18px rgba(64, 40, 20, 0.06);
+  box-shadow: 0 8px 18px rgba(16, 72, 68, 0.06);
 }
 
 .logo-card img {
@@ -99,13 +96,13 @@ body {
 
 .hero-badge {
   background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-  color: #fff7ef;
+  color: #f4fffd;
   font-family: Arial, sans-serif;
   font-size: 13px;
   font-weight: 700;
   padding: 12px 16px;
   border-radius: 999px;
-  box-shadow: 0 10px 20px rgba(89, 52, 28, 0.18);
+  box-shadow: 0 10px 20px rgba(11, 91, 85, 0.18);
 }
 
 .hero-content {
@@ -185,12 +182,12 @@ label {
 input {
   width: 100%;
   height: 56px;
-  border: 1px solid #cdb9a0;
+  border: 1px solid #a9d4cc;
   border-radius: 16px;
   padding: 0 16px;
   font-size: 16px;
   color: var(--text);
-  background: rgba(255, 252, 247, 0.96);
+  background: rgba(252, 255, 255, 0.96);
   outline: none;
   transition: 0.2s ease;
   font-family: Arial, sans-serif;
@@ -198,8 +195,8 @@ input {
 
 input:focus {
   border-color: var(--accent);
-  background: #fffdf9;
-  box-shadow: 0 0 0 4px rgba(122, 75, 42, 0.10);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.10);
 }
 
 .print-btn {
@@ -208,28 +205,28 @@ input:focus {
   border: none;
   border-radius: 16px;
   background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-  color: #fffaf5;
+  color: #f8fffe;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   font-family: Arial, sans-serif;
-  box-shadow: 0 14px 26px rgba(89, 52, 28, 0.20);
+  box-shadow: 0 14px 26px rgba(11, 91, 85, 0.20);
   transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
 .print-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 16px 30px rgba(89, 52, 28, 0.24);
+  box-shadow: 0 16px 30px rgba(11, 91, 85, 0.24);
 }
 
-.ticket-preview-card {
-  background: linear-gradient(180deg, rgba(255, 252, 247, 0.98) 0%, rgba(245, 236, 225, 0.9) 100%);
+.summary-card {
+  background: linear-gradient(180deg, rgba(251, 255, 254, 0.98) 0%, rgba(237, 248, 246, 0.92) 100%);
   border: 1px solid var(--line);
   border-radius: 24px;
   padding: 22px;
 }
 
-.preview-chip {
+.summary-chip {
   display: inline-block;
   background: var(--accent-soft);
   color: var(--accent-dark);
@@ -242,53 +239,43 @@ input:focus {
   letter-spacing: 0.5px;
 }
 
-.preview-code-box {
-  background: rgba(255, 253, 249, 0.96);
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  padding: 18px;
+.table-wrap {
+  overflow-x: auto;
   margin-bottom: 16px;
 }
 
-.mini-title {
-  display: block;
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 8px;
+.summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
   font-family: Arial, sans-serif;
 }
 
-.preview-code {
-  font-size: 36px;
-  line-height: 1.2;
-  font-weight: 700;
-  color: var(--accent-dark);
-  word-break: break-word;
+.summary-table thead th {
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: #f7fffe;
+  text-align: left;
+  padding: 14px 16px;
+  font-size: 14px;
 }
 
-.preview-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(180px, 1fr));
-  gap: 14px;
-  margin-bottom: 16px;
+.summary-table tbody td {
+  padding: 14px 16px;
+  border-top: 1px solid var(--line);
+  font-size: 15px;
+  color: var(--text);
 }
 
-.preview-info-box {
-  background: rgba(255, 253, 249, 0.96);
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: 16px;
-}
-
-.preview-value {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--accent-dark);
+.summary-table tbody tr:nth-child(even) {
+  background: rgba(223, 243, 239, 0.45);
 }
 
 .preview-note {
-  border: 1px dashed #c9b49a;
-  background: rgba(255, 250, 244, 0.78);
+  border: 1px dashed #97cfc4;
+  background: rgba(248, 255, 254, 0.8);
   border-radius: 18px;
   padding: 14px 16px;
   color: var(--muted);
@@ -299,10 +286,6 @@ input:focus {
 
 @media (max-width: 980px) {
   .main-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .preview-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -325,9 +308,5 @@ input:focus {
   .logo-card {
     width: 142px;
     height: 78px;
-  }
-
-  .preview-code {
-    font-size: 28px;
   }
 }
