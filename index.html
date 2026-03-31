@@ -3,40 +3,96 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Musea Brugge | Ticket Generator</title>
+  <title>Musea Brugge | QR Ticket Generator</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
   <div class="page-shell">
 
+    <nav class="navbar">
+      <div class="nav-left">
+        <div class="brand-mark">MB</div>
+        <div class="brand-text">
+          <span class="brand-top">Musea Brugge</span>
+          <span class="brand-bottom">QR Ticket Generator</span>
+        </div>
+      </div>
+
+      <div class="nav-right">
+        <a href="#ticket-invoer">Ticket invoer</a>
+        <a href="#overzicht">Overzicht</a>
+        <a href="#uitleg">Uitleg</a>
+      </div>
+    </nav>
+
     <header class="hero">
-      <div class="hero-top">
-        <div class="logo-strip">
-          <div class="logo-card">
-            <img src="logo-musea-brugge-1.png" alt="Musea Brugge logo 1">
-          </div>
-          <div class="logo-card">
-            <img src="logo-musea-brugge-3.png" alt="Musea Brugge logo 2">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <p class="eyebrow">Musea Brugge</p>
+          <h1>Professioneel ticketsysteem voor labels en QR-codes</h1>
+          <p class="subtitle">
+            Maak snel een ticket door zelf een tekst of artikelcode in te geven, een prijs te kiezen
+            en het aantal labels te bepalen. Alles wordt meteen voorbereid voor afdruk via je ticketprinter.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#ticket-invoer" class="hero-btn primary-btn">Start ticket maken</a>
+            <a href="#overzicht" class="hero-btn secondary-btn">Bekijk overzicht</a>
           </div>
         </div>
 
-        <div class="hero-badge">Ticket generator</div>
-      </div>
+        <div class="hero-side">
+          <div class="logo-panel">
+            <div class="logo-card">
+              <img src="logo-musea-brugge-1.png" alt="Musea Brugge logo 1">
+            </div>
+            <div class="logo-card">
+              <img src="logo-musea-brugge-2.png" alt="Musea Brugge logo 2">
+            </div>
+          </div>
 
-      <div class="hero-content">
-        <p class="eyebrow">Musea Brugge</p>
-        <h1>QR Ticket Generator</h1>
-        <p class="subtitle">
-          Typ zelf een tekst of artikelcode in, kies een prijs en bepaal hoeveel tickets je wil afdrukken.
-        </p>
+          <div class="status-card">
+            <span class="status-label">Systeemstatus</span>
+            <strong>Klaar om tickets te genereren</strong>
+            <p>Gebruik vrije invoer voor tekst, prijs en aantal labels.</p>
+          </div>
+        </div>
       </div>
     </header>
 
+    <section class="feature-strip">
+      <div class="feature-card">
+        <span class="feature-icon">QR</span>
+        <div>
+          <h3>QR-code per ticket</h3>
+          <p>Elke invoer wordt direct als QR-code gebruikt op het ticket.</p>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">€</span>
+        <div>
+          <h3>Prijs vrij instelbaar</h3>
+          <p>Prijs wordt exact aangepast aan wat de gebruiker invoert.</p>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">#</span>
+        <div>
+          <h3>Aantal labels kiezen</h3>
+          <p>Print één ticket of meteen meerdere labels tegelijk.</p>
+        </div>
+      </div>
+    </section>
+
     <main class="main-grid">
-      <section class="panel input-panel">
+      <section class="panel input-panel" id="ticket-invoer">
         <div class="panel-head">
+          <span class="section-tag">Invoer</span>
           <h2>Ticket invullen</h2>
-          <p>Vrije invoer voor tekst, prijs en aantal.</p>
+          <p>Vul hieronder de gegevens in voor het ticket dat je wilt afdrukken.</p>
         </div>
 
         <div class="field-group">
@@ -54,17 +110,32 @@
           <input id="aantal" type="number" value="1" min="1">
         </div>
 
-        <button class="print-btn" id="printButton">Tickets afdrukken</button>
+        <div class="button-group">
+          <button class="print-btn" id="printButton">Tickets afdrukken</button>
+          <button class="ghost-btn" id="resetButton" type="button">Velden leegmaken</button>
+        </div>
+
+        <div class="help-box">
+          <strong>Tip</strong>
+          <p>
+            Je kan hier zowel een artikelcode als vrije tekst invoeren.
+            Die tekst verschijnt op het ticket en wordt ook gebruikt voor de QR-code.
+          </p>
+        </div>
       </section>
 
-      <section class="panel preview-panel">
+      <section class="panel preview-panel" id="overzicht">
         <div class="panel-head">
-          <h2>Overzicht</h2>
-          <p>Dit zijn de gegevens die naar het ticket worden gestuurd.</p>
+          <span class="section-tag">Overzicht</span>
+          <h2>Ingevoerde gegevens</h2>
+          <p>Controleer hieronder alle waarden voor je afdrukt.</p>
         </div>
 
         <div class="summary-card">
-          <div class="summary-chip">Ingevoerde gegevens</div>
+          <div class="summary-top">
+            <div class="summary-chip">Live overzicht</div>
+            <div class="summary-badge" id="summaryBadge">1 ticket</div>
+          </div>
 
           <div class="table-wrap">
             <table class="summary-table">
@@ -91,12 +162,64 @@
             </table>
           </div>
 
+          <div class="preview-cards">
+            <div class="mini-info-card">
+              <span class="mini-title">QR-bron</span>
+              <strong id="miniCode">lalal</strong>
+            </div>
+
+            <div class="mini-info-card">
+              <span class="mini-title">Te printen prijs</span>
+              <strong id="miniPrijs">€ 2.00</strong>
+            </div>
+
+            <div class="mini-info-card">
+              <span class="mini-title">Aantal labels</span>
+              <strong id="miniAantal">1</strong>
+            </div>
+          </div>
+
           <div class="preview-note">
-            De QR-code op het ticket wordt gemaakt op basis van de tekst / artikelcode die je hierboven invult.
+            Het ticket wordt doorgestuurd naar de printpagina met exact deze waarden.
           </div>
         </div>
       </section>
     </main>
+
+    <section class="info-grid" id="uitleg">
+      <div class="info-panel">
+        <span class="section-tag">Werkwijze</span>
+        <h3>Hoe werkt het?</h3>
+        <ul class="info-list">
+          <li>Typ een tekst of artikelcode in.</li>
+          <li>Kies zelf de prijs.</li>
+          <li>Bepaal hoeveel labels je wil afdrukken.</li>
+          <li>Druk op de knop om het ticket te genereren.</li>
+        </ul>
+      </div>
+
+      <div class="info-panel">
+        <span class="section-tag">Print</span>
+        <h3>Voor Zebra labelprinter</h3>
+        <ul class="info-list">
+          <li>Gebruik het juiste etiketformaat.</li>
+          <li>Zet schaal altijd op 100%.</li>
+          <li>Gebruik geen marges.</li>
+          <li>Schakel kop- en voetteksten uit.</li>
+        </ul>
+      </div>
+
+      <div class="info-panel">
+        <span class="section-tag">Voordeel</span>
+        <h3>Waarom deze opzet?</h3>
+        <ul class="info-list">
+          <li>Snel werken op de vloer.</li>
+          <li>Vrije invoer voor elk type ticket.</li>
+          <li>Duidelijk overzicht vóór het printen.</li>
+          <li>Geschikt voor herhaald gebruik.</li>
+        </ul>
+      </div>
+    </section>
 
   </div>
 
@@ -105,10 +228,20 @@
     const prijsInput = document.getElementById("prijs");
     const aantalInput = document.getElementById("aantal");
     const printButton = document.getElementById("printButton");
+    const resetButton = document.getElementById("resetButton");
 
     const previewCode = document.getElementById("previewCode");
     const previewPrijs = document.getElementById("previewPrijs");
     const previewAantal = document.getElementById("previewAantal");
+
+    const miniCode = document.getElementById("miniCode");
+    const miniPrijs = document.getElementById("miniPrijs");
+    const miniAantal = document.getElementById("miniAantal");
+    const summaryBadge = document.getElementById("summaryBadge");
+
+    function formatTicketText(aantal) {
+      return aantal === 1 ? "1 ticket" : `${aantal} tickets`;
+    }
 
     function updatePreview() {
       const code = searchInput.value.trim() || "lalal";
@@ -118,6 +251,12 @@
       previewCode.textContent = code;
       previewPrijs.textContent = "€ " + prijs.toFixed(2);
       previewAantal.textContent = aantal;
+
+      miniCode.textContent = code;
+      miniPrijs.textContent = "€ " + prijs.toFixed(2);
+      miniAantal.textContent = aantal;
+
+      summaryBadge.textContent = formatTicketText(aantal);
     }
 
     function printTicket() {
@@ -149,10 +288,18 @@
       window.open("print.html", "_blank");
     }
 
+    function resetFields() {
+      searchInput.value = "";
+      prijsInput.value = "2.00";
+      aantalInput.value = "1";
+      updatePreview();
+    }
+
     searchInput.addEventListener("input", updatePreview);
     prijsInput.addEventListener("input", updatePreview);
     aantalInput.addEventListener("input", updatePreview);
     printButton.addEventListener("click", printTicket);
+    resetButton.addEventListener("click", resetFields);
 
     updatePreview();
   </script>
