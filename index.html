@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
   <div class="page-shell">
 
     <header class="hero">
@@ -21,28 +20,28 @@
           </div>
         </div>
 
-        <div class="hero-badge">Ticket systeem</div>
+        <div class="hero-badge">Ticket generator</div>
       </div>
 
       <div class="hero-content">
         <p class="eyebrow">Musea Brugge</p>
         <h1>QR Ticket Generator</h1>
         <p class="subtitle">
-          Typ zelf een tekst of artikelcode, kies de prijs en bepaal hoeveel tickets je wil afdrukken.
+          Typ zelf een tekst of artikelcode in, kies een prijs en bepaal hoeveel tickets je wil afdrukken.
         </p>
       </div>
     </header>
 
     <main class="main-grid">
-      <section class="panel search-panel">
+      <section class="panel input-panel">
         <div class="panel-head">
           <h2>Ticket invullen</h2>
-          <p>Je kan zelf eender welke tekst ingeven.</p>
+          <p>Vrije invoer voor tekst, prijs en aantal.</p>
         </div>
 
         <div class="field-group">
           <label for="search">Tekst / artikelcode</label>
-          <input id="search" type="text" placeholder="Bijv. lalal of SHOSTA-1141" autocomplete="off">
+          <input id="search" type="text" placeholder="Bijv. SHOSTA-1141 of lalal" autocomplete="off">
         </div>
 
         <div class="field-group">
@@ -58,58 +57,46 @@
         <button class="print-btn" id="printButton">Tickets afdrukken</button>
       </section>
 
-      <section class="panel result-panel">
+      <section class="panel preview-panel">
         <div class="panel-head">
-          <h2>Voorbeeld</h2>
-          <p>Zo wordt de info doorgestuurd naar het ticket.</p>
+          <h2>Overzicht</h2>
+          <p>Dit zijn de gegevens die naar het ticket worden gestuurd.</p>
         </div>
 
-        <div id="result" class="result-preview">
-          <div class="ticket-card">
-            <div class="article-chip">Voorbeeld</div>
+        <div class="summary-card">
+          <div class="summary-chip">Ingevoerde gegevens</div>
 
-            <div class="big-code-box">
-              <span class="mini-title">Tekst / artikelcode</span>
-              <div class="big-code" id="previewCode">lalal</div>
-            </div>
+          <div class="table-wrap">
+            <table class="summary-table">
+              <thead>
+                <tr>
+                  <th>Veld</th>
+                  <th>Waarde</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Tekst / artikelcode</td>
+                  <td id="previewCode">lalal</td>
+                </tr>
+                <tr>
+                  <td>Prijs</td>
+                  <td id="previewPrijs">€ 2.00</td>
+                </tr>
+                <tr>
+                  <td>Aantal</td>
+                  <td id="previewAantal">1</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-            <div class="settings-grid">
-              <div class="setting-card">
-                <label>Prijs</label>
-                <div class="preview-value" id="previewPrijs">€ 2.00</div>
-              </div>
-
-              <div class="setting-card">
-                <label>Aantal</label>
-                <div class="preview-value" id="previewAantal">1</div>
-              </div>
-            </div>
+          <div class="preview-note">
+            De QR-code op het ticket wordt gemaakt op basis van de tekst / artikelcode die je hierboven invult.
           </div>
         </div>
       </section>
     </main>
-
-    <footer class="footer">
-      <div class="footer-col">
-        <h3>Musea Brugge</h3>
-        <p>Dijver 12</p>
-        <p>8000 Brugge (België)</p>
-      </div>
-
-      <div class="footer-col">
-        <h3>E-mail</h3>
-        <p>
-          <a href="mailto:musea.reservatie@brugge.be">musea.reservatie@brugge.be</a>
-        </p>
-      </div>
-
-      <div class="footer-col">
-        <h3>Telefoon</h3>
-        <p>
-          <a href="tel:+3250448743">+32 50 44 87 43</a>
-        </p>
-      </div>
-    </footer>
 
   </div>
 
@@ -169,6 +156,5 @@
 
     updatePreview();
   </script>
-
 </body>
 </html>
