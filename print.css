@@ -131,6 +131,7 @@ body {
   padding: 10px 14px;
   border-radius: 10px;
   font-weight: 700;
+  cursor: pointer;
 }
 
 .error-message {
