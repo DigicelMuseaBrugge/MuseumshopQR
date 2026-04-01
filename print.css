@@ -47,11 +47,18 @@ body {
   overflow: hidden;
 }
 
-/* QR */
 .qr-box {
   position: absolute;
   left: 1.2mm;
-  top: 4.5mm;
+  top: 4.2mm;
+  width: 15mm;
+  height: 15mm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr {
   width: 15mm;
   height: 15mm;
   display: flex;
@@ -63,52 +70,54 @@ body {
 .qr canvas {
   width: 15mm !important;
   height: 15mm !important;
+  display: block;
 }
 
-/* PRIJS */
 .price-box {
   position: absolute;
-  left: 17.5mm;
+  left: 16.8mm;
   top: 1mm;
-  width: 9mm;
+  width: 9.8mm;
   height: 23mm;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
-/* CODE */
 .code-box {
   position: absolute;
-  left: 27mm;
+  left: 26.8mm;
   top: 1mm;
   width: 10mm;
   height: 23mm;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
-/* STABIELE VERTICALE TEKST */
 .vertical-text {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   white-space: nowrap;
   text-align: center;
+  line-height: 1;
+  color: #000;
 }
 
-/* FIXED SIZES */
 .price {
-  font-size: 7.5pt;
+  font-size: 6.6pt;
   font-weight: 700;
+  letter-spacing: -0.2px;
 }
 
 .code {
-  font-size: 5.8pt;
+  font-size: 5.3pt;
   font-weight: 700;
+  letter-spacing: 0;
 }
 
-/* UI */
 .screen-toolbar {
   position: fixed;
   top: 12px;
@@ -124,8 +133,56 @@ body {
   font-weight: 700;
 }
 
+.error-message {
+  padding: 10px;
+  font-size: 14px;
+}
+
+@media screen {
+  html, body {
+    width: 100%;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #eef8f7 0%, #dff1ee 100%);
+  }
+
+  body {
+    padding: 24px;
+  }
+
+  #labels {
+    width: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    justify-content: center;
+  }
+
+  .page {
+    width: 38mm;
+    height: 25mm;
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(16, 72, 68, 0.14);
+  }
+}
+
 @media print {
+  html, body {
+    width: 38mm;
+    height: 25mm;
+    background: #fff;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
   .screen-toolbar {
     display: none;
+  }
+
+  .page {
+    margin: 0;
+    box-shadow: none;
   }
 }
