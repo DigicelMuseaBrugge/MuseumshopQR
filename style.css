@@ -431,6 +431,45 @@ input:focus {
   font-size: 14px;
 }
 
+.upload-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.upload-field {
+  margin-bottom: 0;
+}
+
+.upload-field input[type="file"] {
+  height: auto;
+  padding: 14px 16px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.upload-status {
+  background: #ffffff;
+  border: 1px dashed #bfd6d2;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.upload-status.success {
+  border-color: #9fcfbe;
+  background: #f4fbf8;
+  color: var(--accent-dark);
+}
+
+.upload-status.error {
+  border-color: #e1b4b4;
+  background: #fff7f7;
+  color: #8a2f2f;
+}
+
 .summary-card {
   background: linear-gradient(180deg, #ffffff 0%, #f8fbfb 100%);
   border: 1px solid #d9e4e5;
