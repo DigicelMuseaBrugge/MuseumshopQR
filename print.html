@@ -26,6 +26,17 @@ try {
   stored = null;
 }
 
+function truncateText(text, maxLength = 32) {
+  if (!text) return "";
+  const str = String(text).trim();
+  return str.length > maxLength ? str.slice(0, maxLength - 1) + "…" : str;
+}
+
+function formatPrice(value) {
+  const amount = Number(value || 0);
+  return "€ " + amount.toFixed(2);
+}
+
 function createLabel(ticket) {
   const page = document.createElement("div");
   page.className = "page";
@@ -33,36 +44,40 @@ function createLabel(ticket) {
   const label = document.createElement("div");
   label.className = "label";
 
+  const qrBox = document.createElement("div");
+  qrBox.className = "qr-box";
+
   const qr = document.createElement("div");
   qr.className = "qr";
+  qrBox.appendChild(qr);
 
-  const priceWrap = document.createElement("div");
-  priceWrap.className = "vertical-block";
+  const priceBox = document.createElement("div");
+  priceBox.className = "price-box";
 
   const price = document.createElement("div");
-  price.className = "price";
-  price.textContent = "€ " + Number(ticket.prijs).toFixed(2);
-  priceWrap.appendChild(price);
+  price.className = "price vertical-text";
+  price.textContent = formatPrice(ticket.prijs);
+  priceBox.appendChild(price);
 
-  const codeWrap = document.createElement("div");
-  codeWrap.className = "vertical-block";
+  const codeBox = document.createElement("div");
+  codeBox.className = "code-box";
 
   const code = document.createElement("div");
-  code.className = "code";
-  code.textContent = ticket.artikelcode;
-  codeWrap.appendChild(code);
+  code.className = "code vertical-text";
+  code.textContent = truncateText(ticket.artikelcode, 32);
+  codeBox.appendChild(code);
 
-  label.appendChild(qr);
-  label.appendChild(priceWrap);
-  label.appendChild(codeWrap);
+  label.appendChild(qrBox);
+  label.appendChild(priceBox);
+  label.appendChild(codeBox);
 
   page.appendChild(label);
   container.appendChild(page);
 
   new QRCode(qr, {
-    text: ticket.artikelcode,
-    width: 120,
-    height: 120,
+    text: ticket.qrText || ticket.artikelcode,
+    width: 110,
+    height: 110,
     correctLevel: QRCode.CorrectLevel.M
   });
 }
