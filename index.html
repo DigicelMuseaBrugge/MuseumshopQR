@@ -300,23 +300,27 @@
       quantity: ""
     }
   };
+    const aliases = {
+  code: [
+    "artikelcode", "artikel code", "artikel", "code", "ticket", "ticketcode",
+    "item", "itemcode", "naam", "titel", "beschrijving", "omschrijving",
+    "product", "productcode", "label", "reference", "ref", "sku", "barcode",
+    "omschrijving ticket", "soort product", "product soort", "type", "ticket type"
+  ],
+  price: [
+    "prijs", "price", "bedrag", "amount", "tarief", "value", "euro", "kostprijs",
+    "salesprice", "ticketprijs", "prijs euro", "kost", "verkoopprijs", "prijs incl",
+    "prijs ex", "eenheidsprijs", "unit price"
+  ],
+  quantity: [
+    "aantal", "qty", "quantity", "count", "labels", "stuks", "pieces", "copies",
+    "copie", "print", "prints", "number", "aantal labels", "aantal tickets",
+    "tickets", "hoeveelheid"
+  ]
+};
 
-  const aliases = {
-    code: [
-      "artikelcode", "artikel", "code", "ticket", "ticketcode", "item", "itemcode",
-      "naam", "titel", "beschrijving", "omschrijving", "product", "label", "reference",
-      "ref", "sku", "barcode", "omschrijving ticket"
-    ],
-    price: [
-      "prijs", "price", "bedrag", "amount", "tarief", "value", "euro", "kostprijs",
-      "salesprice", "ticketprijs", "prijs euro"
-    ],
-    quantity: [
-      "aantal", "qty", "quantity", "count", "labels", "stuks", "pieces", "copies",
-      "copie", "print", "prints", "number", "aantal labels"
-    ]
-  };
 
+  
   function formatTicketText(aantal) {
     return aantal === 1 ? "1 ticket" : `${aantal} tickets`;
   }
@@ -344,6 +348,47 @@
   }
 
   function parseFlexibleNumber(value) {
+    function normalizeCompareText(text) {
+  return cleanCell(text)
+    .toLowerCase()
+    .replace(/[_\-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function findMatchingHeaders(headers, targetAliases) {
+  const normalizedHeaders = headers.map(h => ({
+    original: h,
+    normalized: normalizeCompareText(h)
+  }));
+
+  const matches = [];
+
+  normalizedHeaders.forEach(headerObj => {
+    let score = 0;
+
+    targetAliases.forEach(alias => {
+      const normalizedAlias = normalizeCompareText(alias);
+
+      if (headerObj.normalized === normalizedAlias) {
+        score += 20;
+      } else if (headerObj.normalized.includes(normalizedAlias)) {
+        score += 10;
+      } else if (normalizedAlias.includes(headerObj.normalized) && headerObj.normalized.length > 2) {
+        score += 6;
+      }
+    });
+
+    if (score > 0) {
+      matches.push({
+        header: headerObj.original,
+        score
+      });
+    }
+  });
+
+  return matches.sort((a, b) => b.score - a.score).map(item => item.header);
+}
     if (typeof value === "number") return value;
     if (value === null || value === undefined) return NaN;
 
@@ -487,23 +532,43 @@
 
     return { headers, rows };
   }
+function detectColumns(headers, rows) {
+  const result = {
+    code: "",
+    price: "",
+    quantity: ""
+  };
 
-  function detectColumns(headers, rows) {
-    const result = { code: "", price: "", quantity: "" };
+  const codeMatches = findMatchingHeaders(headers, aliases.code);
+  const priceMatches = findMatchingHeaders(headers, aliases.price);
+  const qtyMatches = findMatchingHeaders(headers, aliases.quantity);
 
-    function headerScore(header, target) {
-      const normalized = header.toLowerCase();
-      let score = 0;
-      aliases[target].forEach(alias => {
-        if (normalized === alias) score += 12;
-        else if (normalized.includes(alias)) score += 6;
-      });
+  result.code = codeMatches[0] || "";
+  result.price = priceMatches[0] || "";
+  result.quantity = qtyMatches[0] || "";
 
-      if (target === "price" && isMostlyNumericColumn(header, rows)) score += 4;
-      if (target === "quantity" && isMostlyIntegerSmallColumn(header, rows)) score += 5;
-      if (target === "code" && !isMostlyNumericColumn(header, rows)) score += 2;
+  if (!result.price) {
+    result.price = headers.find(h => isMostlyNumericColumn(h, rows)) || "";
+  }
 
-      return score;
+  if (!result.quantity) {
+    result.quantity = headers.find(h =>
+      h !== result.price &&
+      isMostlyIntegerSmallColumn(h, rows)
+    ) || "";
+  }
+
+  if (!result.code) {
+    result.code = headers.find(h =>
+      h !== result.price &&
+      h !== result.quantity &&
+      !isMostlyNumericColumn(h, rows)
+    ) || headers[0] || "";
+  }
+
+  return result;
+}
+  
     }
 
     const available = [...headers];
@@ -568,66 +633,75 @@
     return "";
   }
 
-  function buildTicketsFromRows(rows, mapping) {
-    const tickets = [];
-    const invalidRows = [];
+ function buildTicketsFromRows(rows, mapping) {
+  const tickets = [];
+  const invalidRows = [];
 
-    rows.forEach(row => {
-      const codeHeader = mapping.code;
-      const priceHeader = mapping.price;
-      const quantityHeader = mapping.quantity;
+  rows.forEach(row => {
+    const codeHeader = mapping.code;
+    const priceHeader = mapping.price;
+    const quantityHeader = mapping.quantity;
 
-      let artikelcode = cleanCell(row[codeHeader]);
+    let artikelcode = codeHeader ? cleanCell(row[codeHeader]) : "";
+    let prijs = priceHeader ? parseFlexibleNumber(row[priceHeader]) : NaN;
+    let aantal = quantityHeader ? parseFlexibleNumber(row[quantityHeader]) : NaN;
 
-      if (artikelcode && !looksLikeCode(artikelcode) && artikelcode.length > 20) {
-        artikelcode = "";
-      }
+    if (artikelcode && !looksLikeCode(artikelcode) && artikelcode.length > 24) {
+      artikelcode = "";
+    }
 
-      const prijsValue = priceHeader ? parseFlexibleNumber(row[priceHeader]) : NaN;
-      const qtyValue = quantityHeader ? parseFlexibleNumber(row[quantityHeader]) : NaN;
+    if (!artikelcode) {
+      artikelcode = firstUsefulText(row, [priceHeader, quantityHeader]);
+    }
 
-      if (!artikelcode) {
-        artikelcode = firstUsefulText(row, [priceHeader, quantityHeader]);
-      }
+    if (isNaN(prijs) || prijs < 0) {
+      prijs = 0;
+    }
 
-      const prijs = !isNaN(prijsValue) && prijsValue >= 0 ? prijsValue : 0;
-      const aantal = !isNaN(qtyValue) && qtyValue >= 1 ? Math.floor(qtyValue) : 1;
+    if (isNaN(aantal) || aantal < 1) {
+      aantal = 1;
+    }
 
-      const extras = Object.keys(row)
-        .filter(key => key !== "__rowNumber" && ![codeHeader, priceHeader, quantityHeader].includes(key))
-        .map(key => ({
-          label: key,
-          value: cleanCell(row[key])
-        }))
-        .filter(item => item.value !== "");
+    aantal = Math.floor(aantal);
 
-      const isEmptyRow =
-        !artikelcode &&
-        extras.length === 0 &&
-        (isNaN(prijsValue) || prijsValue === 0) &&
-        (isNaN(qtyValue) || qtyValue === 0);
+    const extras = Object.keys(row)
+      .filter(key => key !== "__rowNumber" && ![codeHeader, priceHeader, quantityHeader].includes(key))
+      .map(key => ({
+        label: key,
+        value: cleanCell(row[key])
+      }))
+      .filter(item => item.value !== "");
 
-      if (isEmptyRow) return;
+    const isEmptyRow =
+      !artikelcode &&
+      extras.length === 0 &&
+      (prijs === 0 || isNaN(prijs)) &&
+      (aantal === 0 || isNaN(aantal));
 
-      if (!artikelcode) {
-        invalidRows.push({
-          rowNumber: row.__rowNumber || "?",
-          reason: "Geen bruikbare code gevonden."
-        });
-        return;
-      }
+    if (isEmptyRow) {
+      return;
+    }
 
-      tickets.push({
-        artikelcode,
-        prijs,
-        aantal,
-        qrText: artikelcode,
-        extras,
-        rowNumber: row.__rowNumber || ""
+    if (!artikelcode) {
+      invalidRows.push({
+        rowNumber: row.__rowNumber || "?",
+        reason: "Geen bruikbare code gevonden."
       });
-    });
+      return;
+    }
 
-    return { tickets, invalidRows };
+    tickets.push({
+      artikelcode,
+      prijs,
+      aantal,
+      qrText: artikelcode,
+      extras,
+      rowNumber: row.__rowNumber || ""
+    });
+  });
+
+  return { tickets, invalidRows };
+}
   }
 
   function fillMappingSelect(select, headers, selectedValue) {
