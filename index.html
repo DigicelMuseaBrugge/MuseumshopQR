@@ -250,454 +250,456 @@
     </section>
 
   </div>
+<script>
+  const searchInput = document.getElementById("search");
+  const prijsInput = document.getElementById("prijs");
+  const aantalInput = document.getElementById("aantal");
+  const excelFileInput = document.getElementById("excelFile");
+  const printButton = document.getElementById("printButton");
+  const resetButton = document.getElementById("resetButton");
+  const rebuildImportButton = document.getElementById("rebuildImportButton");
+  const downloadTemplateButton = document.getElementById("downloadTemplateButton");
 
-  <script>
-    const searchInput = document.getElementById("search");
-    const prijsInput = document.getElementById("prijs");
-    const aantalInput = document.getElementById("aantal");
-    const excelFileInput = document.getElementById("excelFile");
-    const printButton = document.getElementById("printButton");
-    const resetButton = document.getElementById("resetButton");
-    const rebuildImportButton = document.getElementById("rebuildImportButton");
-    const downloadTemplateButton = document.getElementById("downloadTemplateButton");
+  const previewCode = document.getElementById("previewCode");
+  const previewPrijs = document.getElementById("previewPrijs");
+  const previewAantal = document.getElementById("previewAantal");
+  const previewSource = document.getElementById("previewSource");
 
-    const previewCode = document.getElementById("previewCode");
-    const previewPrijs = document.getElementById("previewPrijs");
-    const previewAantal = document.getElementById("previewAantal");
-    const previewSource = document.getElementById("previewSource");
+  const miniCode = document.getElementById("miniCode");
+  const miniPrijs = document.getElementById("miniPrijs");
+  const miniAantal = document.getElementById("miniAantal");
+  const summaryBadge = document.getElementById("summaryBadge");
 
-    const miniCode = document.getElementById("miniCode");
-    const miniPrijs = document.getElementById("miniPrijs");
-    const miniAantal = document.getElementById("miniAantal");
-    const summaryBadge = document.getElementById("summaryBadge");
+  const uploadStatus = document.getElementById("uploadStatus");
+  const mappingPanel = document.getElementById("mappingPanel");
+  const importTools = document.getElementById("importTools");
+  const mapCode = document.getElementById("mapCode");
+  const mapPrice = document.getElementById("mapPrice");
+  const mapQty = document.getElementById("mapQty");
 
-    const uploadStatus = document.getElementById("uploadStatus");
-    const mappingPanel = document.getElementById("mappingPanel");
-    const importTools = document.getElementById("importTools");
-    const mapCode = document.getElementById("mapCode");
-    const mapPrice = document.getElementById("mapPrice");
-    const mapQty = document.getElementById("mapQty");
+  const importPreviewCard = document.getElementById("importPreviewCard");
+  const importMetaBadge = document.getElementById("importMetaBadge");
+  const importFileName = document.getElementById("importFileName");
+  const importSheetName = document.getElementById("importSheetName");
+  const importValidCount = document.getElementById("importValidCount");
+  const importInvalidCount = document.getElementById("importInvalidCount");
+  const importPreviewHead = document.getElementById("importPreviewHead");
+  const importPreviewBody = document.getElementById("importPreviewBody");
+  const importErrorsNote = document.getElementById("importErrorsNote");
 
-    const importPreviewCard = document.getElementById("importPreviewCard");
-    const importMetaBadge = document.getElementById("importMetaBadge");
-    const importFileName = document.getElementById("importFileName");
-    const importSheetName = document.getElementById("importSheetName");
-    const importValidCount = document.getElementById("importValidCount");
-    const importInvalidCount = document.getElementById("importInvalidCount");
-    const importPreviewHead = document.getElementById("importPreviewHead");
-    const importPreviewBody = document.getElementById("importPreviewBody");
-    const importErrorsNote = document.getElementById("importErrorsNote");
+  const state = {
+    importedTickets: [],
+    rawRows: [],
+    headers: [],
+    fileName: "",
+    sheetName: "",
+    invalidRows: [],
+    mapping: {
+      code: "",
+      price: "",
+      quantity: ""
+    }
+  };
 
-    const state = {
-      importedTickets: [],
-      rawRows: [],
-      headers: [],
-      fileName: "",
-      sheetName: "",
-      invalidRows: [],
-      mapping: {
-        code: "",
-        price: "",
-        quantity: ""
+  const aliases = {
+    code: [
+      "artikelcode", "artikel", "code", "ticket", "ticketcode", "item", "itemcode",
+      "naam", "titel", "beschrijving", "omschrijving", "product", "label", "reference",
+      "ref", "sku", "barcode", "omschrijving ticket"
+    ],
+    price: [
+      "prijs", "price", "bedrag", "amount", "tarief", "value", "euro", "kostprijs",
+      "salesprice", "ticketprijs", "prijs euro"
+    ],
+    quantity: [
+      "aantal", "qty", "quantity", "count", "labels", "stuks", "pieces", "copies",
+      "copie", "print", "prints", "number", "aantal labels"
+    ]
+  };
+
+  function formatTicketText(aantal) {
+    return aantal === 1 ? "1 ticket" : `${aantal} tickets`;
+  }
+
+  function formatPrice(value) {
+    const amount = Number(value);
+    if (isNaN(amount)) return "€ 0,00";
+    return new Intl.NumberFormat("nl-BE", {
+      style: "currency",
+      currency: "EUR"
+    }).format(amount);
+  }
+
+  function setStatus(message, type = "neutral") {
+    if (!uploadStatus) return;
+    uploadStatus.textContent = message;
+    uploadStatus.className = "import-status";
+    uploadStatus.classList.add(type);
+  }
+
+  function cleanCell(value) {
+    if (value === null || value === undefined) return "";
+    if (typeof value === "number") return String(value);
+    return String(value).trim();
+  }
+
+  function parseFlexibleNumber(value) {
+    if (typeof value === "number") return value;
+    if (value === null || value === undefined) return NaN;
+
+    let text = String(value).trim();
+    if (!text) return NaN;
+
+    text = text
+      .replace(/\s/g, "")
+      .replace(/€/g, "")
+      .replace(/[A-Za-z]/g, "");
+
+    const hasComma = text.includes(",");
+    const hasDot = text.includes(".");
+
+    if (hasComma && hasDot) {
+      if (text.lastIndexOf(",") > text.lastIndexOf(".")) {
+        text = text.replace(/\./g, "").replace(",", ".");
+      } else {
+        text = text.replace(/,/g, "");
       }
-    };
-
-    const aliases = {
-      code: [
-        "artikelcode", "artikel", "code", "ticket", "ticketcode", "item", "itemcode",
-        "naam", "titel", "beschrijving", "omschrijving", "product", "label", "reference",
-        "ref", "sku", "barcode", "omschrijving ticket"
-      ],
-      price: [
-        "prijs", "price", "bedrag", "amount", "tarief", "value", "euro", "kostprijs",
-        "salesprice", "ticketprijs", "prijs euro"
-      ],
-      quantity: [
-        "aantal", "qty", "quantity", "count", "labels", "stuks", "pieces", "copies",
-        "copie", "print", "prints", "number", "aantal labels"
-      ]
-    };
-
-    function formatTicketText(aantal) {
-      return aantal === 1 ? "1 ticket" : `${aantal} tickets`;
+    } else if (hasComma) {
+      text = text.replace(",", ".");
     }
 
-    function formatPrice(value) {
-      const amount = Number(value);
-      if (isNaN(amount)) return "€ 0,00";
-      return new Intl.NumberFormat("nl-BE", {
-        style: "currency",
-        currency: "EUR"
-      }).format(amount);
-    }
+    const num = Number(text);
+    return Number.isFinite(num) ? num : NaN;
+  }
 
-    function setStatus(message, type = "neutral") {
-      uploadStatus.textContent = message;
-      uploadStatus.className = "import-status";
-      uploadStatus.classList.add(type);
-    }
+  function looksLikeCode(value) {
+    const text = cleanCell(value).toUpperCase();
+    if (!text) return false;
 
-    function cleanCell(value) {
-      if (value === null || value === undefined) return "";
-      if (typeof value === "number") return String(value);
-      return String(value).trim();
-    }
+    return (
+      /^[A-Z0-9]{2,}[-_/][A-Z0-9-_/]{2,}$/.test(text) ||
+      /^[A-Z]{2,}[0-9]{2,}$/.test(text) ||
+      /^[A-Z0-9-]{5,}$/.test(text)
+    );
+  }
 
-    function parseFlexibleNumber(value) {
-      if (typeof value === "number") return value;
-      if (value === null || value === undefined) return NaN;
+  function isMostlyNumericColumn(columnName, rows) {
+    let numeric = 0;
+    let total = 0;
 
-      let text = String(value).trim();
-      if (!text) return NaN;
+    rows.slice(0, 25).forEach(row => {
+      const value = row[columnName];
+      if (value === "" || value === null || value === undefined) return;
+      total++;
+      if (!isNaN(parseFlexibleNumber(value))) numeric++;
+    });
 
-      text = text
-        .replace(/\s/g, "")
-        .replace(/€/g, "")
-        .replace(/[A-Za-z]/g, "");
+    return total > 0 && numeric / total >= 0.7;
+  }
 
-      const hasComma = text.includes(",");
-      const hasDot = text.includes(".");
+  function isMostlyIntegerSmallColumn(columnName, rows) {
+    let matches = 0;
+    let total = 0;
 
-      if (hasComma && hasDot) {
-        if (text.lastIndexOf(",") > text.lastIndexOf(".")) {
-          text = text.replace(/\./g, "").replace(",", ".");
-        } else {
-          text = text.replace(/,/g, "");
-        }
-      } else if (hasComma) {
-        text = text.replace(",", ".");
+    rows.slice(0, 25).forEach(row => {
+      const value = row[columnName];
+      if (value === "" || value === null || value === undefined) return;
+      const num = parseFlexibleNumber(value);
+      if (isNaN(num)) return;
+      total++;
+      if (Number.isInteger(num) && num >= 0 && num <= 10000) matches++;
+    });
+
+    return total > 0 && matches / total >= 0.75;
+  }
+
+  function normalizeHeaderName(name, index) {
+    const base = cleanCell(name) || `Kolom ${index + 1}`;
+    return base.replace(/\s+/g, " ").trim();
+  }
+
+  function uniquifyHeaders(headers) {
+    const seen = new Map();
+
+    return headers.map(header => {
+      const key = header.toLowerCase();
+      const count = seen.get(key) || 0;
+      seen.set(key, count + 1);
+      return count === 0 ? header : `${header} (${count + 1})`;
+    });
+  }
+
+  function rowKeywordScore(row) {
+    const values = row.map(cleanCell).filter(Boolean);
+    if (!values.length) return -100;
+
+    let score = 0;
+    values.forEach(cell => {
+      const lower = cell.toLowerCase();
+      Object.values(aliases).flat().forEach(alias => {
+        if (lower.includes(alias)) score += 3;
+      });
+      if (/[A-Za-z]/.test(cell)) score += 0.6;
+      if (!isNaN(parseFlexibleNumber(cell))) score -= 0.4;
+    });
+
+    if (values.length >= 2) score += 1;
+    return score;
+  }
+
+  function detectHeaderRow(aoa) {
+    const limit = Math.min(10, aoa.length);
+    let bestIndex = 0;
+    let bestScore = -Infinity;
+
+    for (let i = 0; i < limit; i++) {
+      const score = rowKeywordScore(aoa[i] || []);
+      if (score > bestScore) {
+        bestScore = score;
+        bestIndex = i;
       }
-
-      const num = Number(text);
-      return Number.isFinite(num) ? num : NaN;
     }
 
-    function isMostlyNumericColumn(columnName, rows) {
-      let numeric = 0;
-      let total = 0;
+    return bestScore >= 2 ? bestIndex : 0;
+  }
 
-      rows.slice(0, 25).forEach(row => {
-        const value = row[columnName];
-        if (value === "" || value === null || value === undefined) return;
-        total++;
-        if (!isNaN(parseFlexibleNumber(value))) numeric++;
+  function buildObjectsFromSheet(aoa) {
+    const nonEmptyRows = aoa
+      .map(row => Array.isArray(row) ? row : [])
+      .filter(row => row.some(cell => cleanCell(cell) !== ""));
+
+    if (!nonEmptyRows.length) {
+      return { headers: [], rows: [] };
+    }
+
+    const headerIndex = detectHeaderRow(nonEmptyRows);
+    const headerRow = nonEmptyRows[headerIndex] || [];
+    const headers = uniquifyHeaders(headerRow.map((cell, idx) => normalizeHeaderName(cell, idx)));
+
+    const rows = nonEmptyRows.slice(headerIndex + 1).map((row, index) => {
+      const obj = {};
+      headers.forEach((header, colIdx) => {
+        obj[header] = cleanCell(row[colIdx] ?? "");
       });
+      obj.__rowNumber = headerIndex + 2 + index;
+      return obj;
+    });
 
-      return total > 0 && numeric / total >= 0.7;
-    }
+    return { headers, rows };
+  }
 
-    function isMostlyIntegerSmallColumn(columnName, rows) {
-      let matches = 0;
-      let total = 0;
+  function detectColumns(headers, rows) {
+    const result = { code: "", price: "", quantity: "" };
 
-      rows.slice(0, 25).forEach(row => {
-        const value = row[columnName];
-        if (value === "" || value === null || value === undefined) return;
-        const num = parseFlexibleNumber(value);
-        if (isNaN(num)) return;
-        total++;
-        if (Number.isInteger(num) && num >= 0 && num <= 10000) matches++;
-      });
-
-      return total > 0 && matches / total >= 0.75;
-    }
-
-    function normalizeHeaderName(name, index) {
-      const base = cleanCell(name) || `Kolom ${index + 1}`;
-      return base.replace(/\s+/g, " ").trim();
-    }
-
-    function uniquifyHeaders(headers) {
-      const seen = new Map();
-
-      return headers.map(header => {
-        const key = header.toLowerCase();
-        const count = seen.get(key) || 0;
-        seen.set(key, count + 1);
-        return count === 0 ? header : `${header} (${count + 1})`;
-      });
-    }
-
-    function rowKeywordScore(row) {
-      const values = row.map(cleanCell).filter(Boolean);
-      if (!values.length) return -100;
-
+    function headerScore(header, target) {
+      const normalized = header.toLowerCase();
       let score = 0;
-      values.forEach(cell => {
-        const lower = cell.toLowerCase();
-        Object.values(aliases).flat().forEach(alias => {
-          if (lower.includes(alias)) score += 3;
-        });
-        if (/[A-Za-z]/.test(cell)) score += 0.6;
-        if (!isNaN(parseFlexibleNumber(cell))) score -= 0.4;
+      aliases[target].forEach(alias => {
+        if (normalized === alias) score += 12;
+        else if (normalized.includes(alias)) score += 6;
       });
 
-      if (values.length >= 2) score += 1;
+      if (target === "price" && isMostlyNumericColumn(header, rows)) score += 4;
+      if (target === "quantity" && isMostlyIntegerSmallColumn(header, rows)) score += 5;
+      if (target === "code" && !isMostlyNumericColumn(header, rows)) score += 2;
+
       return score;
     }
 
-    function detectHeaderRow(aoa) {
-      const limit = Math.min(10, aoa.length);
-      let bestIndex = 0;
+    const available = [...headers];
+
+    ["code", "price", "quantity"].forEach(target => {
+      let bestHeader = "";
       let bestScore = -Infinity;
 
-      for (let i = 0; i < limit; i++) {
-        const score = rowKeywordScore(aoa[i] || []);
+      available.forEach(header => {
+        const score = headerScore(header, target);
         if (score > bestScore) {
+          bestHeader = header;
           bestScore = score;
-          bestIndex = i;
-        }
-      }
-
-      return bestScore >= 2 ? bestIndex : 0;
-    }
-
-    function buildObjectsFromSheet(aoa) {
-      const nonEmptyRows = aoa
-        .map(row => Array.isArray(row) ? row : [])
-        .filter(row => row.some(cell => cleanCell(cell) !== ""));
-
-      if (!nonEmptyRows.length) {
-        return { headers: [], rows: [] };
-      }
-
-      const headerIndex = detectHeaderRow(nonEmptyRows);
-      const headerRow = nonEmptyRows[headerIndex] || [];
-      const headers = uniquifyHeaders(headerRow.map((cell, idx) => normalizeHeaderName(cell, idx)));
-
-      const rows = nonEmptyRows.slice(headerIndex + 1).map((row, index) => {
-        const obj = {};
-        headers.forEach((header, colIdx) => {
-          obj[header] = cleanCell(row[colIdx] ?? "");
-        });
-        obj.__rowNumber = headerIndex + 2 + index;
-        return obj;
-      });
-
-      return { headers, rows };
-    }
-
-    function detectColumns(headers, rows) {
-      const result = { code: "", price: "", quantity: "" };
-
-      function headerScore(header, target) {
-        const normalized = header.toLowerCase();
-        let score = 0;
-        aliases[target].forEach(alias => {
-          if (normalized === alias) score += 12;
-          else if (normalized.includes(alias)) score += 6;
-        });
-
-        if (target === "price" && isMostlyNumericColumn(header, rows)) score += 4;
-        if (target === "quantity" && isMostlyIntegerSmallColumn(header, rows)) score += 5;
-        if (target === "code" && !isMostlyNumericColumn(header, rows)) score += 2;
-
-        return score;
-      }
-
-      const available = [...headers];
-
-      ["code", "price", "quantity"].forEach(target => {
-        let bestHeader = "";
-        let bestScore = -Infinity;
-
-        available.forEach(header => {
-          const score = headerScore(header, target);
-          if (score > bestScore) {
-            bestHeader = header;
-            bestScore = score;
-          }
-        });
-
-        if (bestHeader && bestScore > 0) {
-          result[target] = bestHeader;
-          const index = available.indexOf(bestHeader);
-          if (index >= 0) available.splice(index, 1);
         }
       });
 
-      if (!result.code) {
-        result.code = headers.find(h => !isMostlyNumericColumn(h, rows)) || headers[0] || "";
+      if (bestHeader && bestScore > 0) {
+        result[target] = bestHeader;
+        const index = available.indexOf(bestHeader);
+        if (index >= 0) available.splice(index, 1);
       }
+    });
 
-      if (!result.price) {
-        result.price = headers.find(h => h !== result.code && isMostlyNumericColumn(h, rows)) || "";
-      }
-
-      if (!result.quantity) {
-        result.quantity = headers.find(h => h !== result.code && h !== result.price && isMostlyIntegerSmallColumn(h, rows)) || "";
-      }
-
-      return result;
+    if (!result.code) {
+      result.code = headers.find(h => !isMostlyNumericColumn(h, rows)) || headers[0] || "";
     }
-        function looksLikeCode(value) {
-  const text = cleanCell(value).toUpperCase();
-  if (!text) return false;
 
-  return (
-    /^[A-Z0-9]{2,}[-_/][A-Z0-9-_/]{2,}$/.test(text) ||
-    /^[A-Z]{2,}[0-9]{2,}$/.test(text) ||
-    /^[A-Z0-9-]{5,}$/.test(text)
-  );
-}
+    if (!result.price) {
+      result.price = headers.find(h => h !== result.code && isMostlyNumericColumn(h, rows)) || "";
+    }
 
-function firstUsefulText(row, excludedHeaders = []) {
-  const excluded = new Set(excludedHeaders.filter(Boolean));
+    if (!result.quantity) {
+      result.quantity = headers.find(h => h !== result.code && h !== result.price && isMostlyIntegerSmallColumn(h, rows)) || "";
+    }
 
-  for (const key of Object.keys(row)) {
-    if (key === "__rowNumber" || excluded.has(key)) continue;
-    const value = cleanCell(row[key]);
-    if (!value) continue;
-    if (looksLikeCode(value)) return value;
+    return result;
   }
 
-  for (const key of Object.keys(row)) {
-    if (key === "__rowNumber" || excluded.has(key)) continue;
-    const value = cleanCell(row[key]);
-    if (!value) continue;
+  function firstUsefulText(row, excludedHeaders = []) {
+    const excluded = new Set(excludedHeaders.filter(Boolean));
 
-    if (
-      (isNaN(parseFlexibleNumber(value)) || /[A-Za-z]/.test(value)) &&
-      value.length <= 20
-    ) {
-      return value;
+    for (const key of Object.keys(row)) {
+      if (key === "__rowNumber" || excluded.has(key)) continue;
+      const value = cleanCell(row[key]);
+      if (!value) continue;
+      if (looksLikeCode(value)) return value;
     }
+
+    for (const key of Object.keys(row)) {
+      if (key === "__rowNumber" || excluded.has(key)) continue;
+      const value = cleanCell(row[key]);
+      if (!value) continue;
+
+      if (
+        (isNaN(parseFlexibleNumber(value)) || /[A-Za-z]/.test(value)) &&
+        value.length <= 20
+      ) {
+        return value;
+      }
+    }
+
+    return "";
   }
 
-  return "";
-}
-    
-    }
+  function buildTicketsFromRows(rows, mapping) {
+    const tickets = [];
+    const invalidRows = [];
 
-    function buildTicketsFromRows(rows, mapping) {
-      const tickets = [];
-      const invalidRows = [];
+    rows.forEach(row => {
+      const codeHeader = mapping.code;
+      const priceHeader = mapping.price;
+      const quantityHeader = mapping.quantity;
 
-      rows.forEach(row => {
-        const codeHeader = mapping.code;
-        const priceHeader = mapping.price;
-        const quantityHeader = mapping.quantity;
+      let artikelcode = cleanCell(row[codeHeader]);
 
-        let artikelcode = cleanCell(row[codeHeader]);
+      if (artikelcode && !looksLikeCode(artikelcode) && artikelcode.length > 20) {
+        artikelcode = "";
+      }
 
-if (artikelcode && !looksLikeCode(artikelcode) && artikelcode.length > 20) {
-  artikelcode = "";
-}
-        const prijsValue = priceHeader ? parseFlexibleNumber(row[priceHeader]) : NaN;
-        const qtyValue = quantityHeader ? parseFlexibleNumber(row[quantityHeader]) : NaN;
+      const prijsValue = priceHeader ? parseFlexibleNumber(row[priceHeader]) : NaN;
+      const qtyValue = quantityHeader ? parseFlexibleNumber(row[quantityHeader]) : NaN;
 
-        if (!artikelcode) {
-          artikelcode = firstUsefulText(row, [priceHeader, quantityHeader]);
-        }
+      if (!artikelcode) {
+        artikelcode = firstUsefulText(row, [priceHeader, quantityHeader]);
+      }
 
-        const prijs = !isNaN(prijsValue) && prijsValue >= 0 ? prijsValue : 0;
-        const aantal = !isNaN(qtyValue) && qtyValue >= 1 ? Math.floor(qtyValue) : 1;
+      const prijs = !isNaN(prijsValue) && prijsValue >= 0 ? prijsValue : 0;
+      const aantal = !isNaN(qtyValue) && qtyValue >= 1 ? Math.floor(qtyValue) : 1;
 
-        const extras = Object.keys(row)
-          .filter(key => key !== "__rowNumber" && ![codeHeader, priceHeader, quantityHeader].includes(key))
-          .map(key => ({
-            label: key,
-            value: cleanCell(row[key])
-          }))
-          .filter(item => item.value !== "");
+      const extras = Object.keys(row)
+        .filter(key => key !== "__rowNumber" && ![codeHeader, priceHeader, quantityHeader].includes(key))
+        .map(key => ({
+          label: key,
+          value: cleanCell(row[key])
+        }))
+        .filter(item => item.value !== "");
 
-        const isEmptyRow =
-          !artikelcode &&
-          extras.length === 0 &&
-          (isNaN(prijsValue) || prijsValue === 0) &&
-          (isNaN(qtyValue) || qtyValue === 0);
+      const isEmptyRow =
+        !artikelcode &&
+        extras.length === 0 &&
+        (isNaN(prijsValue) || prijsValue === 0) &&
+        (isNaN(qtyValue) || qtyValue === 0);
 
-        if (isEmptyRow) {
-          return;
-        }
+      if (isEmptyRow) return;
 
-        if (!artikelcode) {
-          invalidRows.push({
-            rowNumber: row.__rowNumber || "?",
-            reason: "Geen bruikbare tekst of code gevonden."
-          });
-          return;
-        }
-
-        tickets.push({
-          artikelcode,
-          prijs,
-          aantal,
-          qrText: artikelcode,
-          extras,
-          rowNumber: row.__rowNumber || ""
+      if (!artikelcode) {
+        invalidRows.push({
+          rowNumber: row.__rowNumber || "?",
+          reason: "Geen bruikbare code gevonden."
         });
-      });
-
-      return { tickets, invalidRows };
-    }
-
-    function fillMappingSelect(select, headers, selectedValue) {
-      select.innerHTML = "";
-
-      const emptyOption = document.createElement("option");
-      emptyOption.value = "";
-      emptyOption.textContent = "Niet gebruiken";
-      select.appendChild(emptyOption);
-
-      headers.forEach(header => {
-        const option = document.createElement("option");
-        option.value = header;
-        option.textContent = header;
-        if (header === selectedValue) option.selected = true;
-        select.appendChild(option);
-      });
-    }
-
-    function refreshMappingUI() {
-      if (!state.headers.length) {
-        mappingPanel.classList.add("hidden");
-        importTools.classList.add("hidden");
         return;
       }
 
-      fillMappingSelect(mapCode, state.headers, state.mapping.code);
-      fillMappingSelect(mapPrice, state.headers, state.mapping.price);
-      fillMappingSelect(mapQty, state.headers, state.mapping.quantity);
+      tickets.push({
+        artikelcode,
+        prijs,
+        aantal,
+        qrText: artikelcode,
+        extras,
+        rowNumber: row.__rowNumber || ""
+      });
+    });
 
-      mappingPanel.classList.remove("hidden");
-      importTools.classList.remove("hidden");
+    return { tickets, invalidRows };
+  }
+
+  function fillMappingSelect(select, headers, selectedValue) {
+    if (!select) return;
+    select.innerHTML = "";
+
+    const emptyOption = document.createElement("option");
+    emptyOption.value = "";
+    emptyOption.textContent = "Niet gebruiken";
+    select.appendChild(emptyOption);
+
+    headers.forEach(header => {
+      const option = document.createElement("option");
+      option.value = header;
+      option.textContent = header;
+      if (header === selectedValue) option.selected = true;
+      select.appendChild(option);
+    });
+  }
+
+  function refreshMappingUI() {
+    if (!state.headers.length) {
+      if (mappingPanel) mappingPanel.classList.add("hidden");
+      if (importTools) importTools.classList.add("hidden");
+      return;
     }
 
-    function renderImportPreview() {
-      if (!state.headers.length || !state.rawRows.length) {
-        importPreviewCard.classList.add("hidden");
-        return;
-      }
+    fillMappingSelect(mapCode, state.headers, state.mapping.code);
+    fillMappingSelect(mapPrice, state.headers, state.mapping.price);
+    fillMappingSelect(mapQty, state.headers, state.mapping.quantity);
 
-      importPreviewCard.classList.remove("hidden");
-      importMetaBadge.textContent = `${state.rawRows.length} rijen`;
-      importFileName.textContent = state.fileName || "—";
-      importSheetName.textContent = state.sheetName || "—";
-      importValidCount.textContent = String(state.importedTickets.length);
-      importInvalidCount.textContent = String(state.invalidRows.length);
+    if (mappingPanel) mappingPanel.classList.remove("hidden");
+    if (importTools) importTools.classList.remove("hidden");
+  }
 
-      importPreviewHead.innerHTML = "";
-      importPreviewBody.innerHTML = "";
+  function renderImportPreview() {
+    if (!importPreviewCard || !importPreviewHead || !importPreviewBody) return;
 
-      const headRow = document.createElement("tr");
+    if (!state.headers.length || !state.rawRows.length) {
+      importPreviewCard.classList.add("hidden");
+      return;
+    }
+
+    importPreviewCard.classList.remove("hidden");
+    if (importMetaBadge) importMetaBadge.textContent = `${state.rawRows.length} rijen`;
+    if (importFileName) importFileName.textContent = state.fileName || "—";
+    if (importSheetName) importSheetName.textContent = state.sheetName || "—";
+    if (importValidCount) importValidCount.textContent = String(state.importedTickets.length);
+    if (importInvalidCount) importInvalidCount.textContent = String(state.invalidRows.length);
+
+    importPreviewHead.innerHTML = "";
+    importPreviewBody.innerHTML = "";
+
+    const headRow = document.createElement("tr");
+    state.headers.slice(0, 6).forEach(header => {
+      const th = document.createElement("th");
+      th.textContent = header;
+      headRow.appendChild(th);
+    });
+    importPreviewHead.appendChild(headRow);
+
+    state.rawRows.slice(0, 8).forEach(row => {
+      const tr = document.createElement("tr");
       state.headers.slice(0, 6).forEach(header => {
-        const th = document.createElement("th");
-        th.textContent = header;
-        headRow.appendChild(th);
+        const td = document.createElement("td");
+        td.textContent = cleanCell(row[header]) || "—";
+        tr.appendChild(td);
       });
-      importPreviewHead.appendChild(headRow);
+      importPreviewBody.appendChild(tr);
+    });
 
-      state.rawRows.slice(0, 8).forEach(row => {
-        const tr = document.createElement("tr");
-        state.headers.slice(0, 6).forEach(header => {
-          const td = document.createElement("td");
-          td.textContent = cleanCell(row[header]) || "—";
-          tr.appendChild(td);
-        });
-        importPreviewBody.appendChild(tr);
-      });
-
+    if (importErrorsNote) {
       if (state.invalidRows.length) {
         const messages = state.invalidRows.slice(0, 5).map(item => `Rij ${item.rowNumber}: ${item.reason}`);
         importErrorsNote.textContent = `Opmerking: ${messages.join(" | ")}`;
@@ -705,236 +707,245 @@ if (artikelcode && !looksLikeCode(artikelcode) && artikelcode.length > 20) {
         importErrorsNote.textContent = "Geen importfouten.";
       }
     }
+  }
 
-    function updatePreview() {
-      if (state.importedTickets.length > 0) {
-        const totaalLabels = state.importedTickets.reduce((sum, item) => sum + item.aantal, 0);
-        const eerste = state.importedTickets[0];
-        const uniekePrijzen = [...new Set(state.importedTickets.map(item => Number(item.prijs).toFixed(2)))];
+  function updatePreview() {
+    if (state.importedTickets.length > 0) {
+      const totaalLabels = state.importedTickets.reduce((sum, item) => sum + item.aantal, 0);
+      const eerste = state.importedTickets[0];
+      const uniekePrijzen = [...new Set(state.importedTickets.map(item => Number(item.prijs).toFixed(2)))];
 
-        previewCode.textContent = state.importedTickets.length === 1
-          ? eerste.artikelcode
-          : `${eerste.artikelcode} + ${state.importedTickets.length - 1} andere`;
-        previewPrijs.textContent = uniekePrijzen.length === 1
-          ? formatPrice(uniekePrijzen[0])
-          : "Meerdere prijzen";
-        previewAantal.textContent = String(totaalLabels);
-        previewSource.textContent = `Excel import (${state.fileName || "bestand"})`;
+      previewCode.textContent = state.importedTickets.length === 1
+        ? eerste.artikelcode
+        : `${eerste.artikelcode} + ${state.importedTickets.length - 1} andere`;
+      previewPrijs.textContent = uniekePrijzen.length === 1
+        ? formatPrice(uniekePrijzen[0])
+        : "Meerdere prijzen";
+      previewAantal.textContent = String(totaalLabels);
+      previewSource.textContent = `Excel import (${state.fileName || "bestand"})`;
 
-        miniCode.textContent = `${state.importedTickets.length} ticketrij(en)`;
-        miniPrijs.textContent = uniekePrijzen.length === 1 ? formatPrice(uniekePrijzen[0]) : "Variabel";
-        miniAantal.textContent = String(totaalLabels);
+      miniCode.textContent = `${state.importedTickets.length} ticketrij(en)`;
+      miniPrijs.textContent = uniekePrijzen.length === 1 ? formatPrice(uniekePrijzen[0]) : "Variabel";
+      miniAantal.textContent = String(totaalLabels);
 
-        summaryBadge.textContent = formatTicketText(totaalLabels);
-        return;
-      }
-
-      const code = searchInput.value.trim() || "lalal";
-      const prijs = Number(prijsInput.value || 0);
-      const aantal = Number(aantalInput.value || 1);
-
-      previewCode.textContent = code;
-      previewPrijs.textContent = formatPrice(prijs);
-      previewAantal.textContent = String(aantal);
-      previewSource.textContent = "Manuele invoer";
-
-      miniCode.textContent = code;
-      miniPrijs.textContent = formatPrice(prijs);
-      miniAantal.textContent = String(aantal);
-
-      summaryBadge.textContent = formatTicketText(aantal);
+      summaryBadge.textContent = formatTicketText(totaalLabels);
+      return;
     }
 
-    function rebuildImportedTickets() {
-      if (!state.rawRows.length) return;
+    const code = searchInput.value.trim() || "lalal";
+    const prijs = Number(prijsInput.value || 0);
+    const aantal = Number(aantalInput.value || 1);
 
-      state.mapping = {
-        code: mapCode.value,
-        price: mapPrice.value,
-        quantity: mapQty.value
-      };
+    previewCode.textContent = code;
+    previewPrijs.textContent = formatPrice(prijs);
+    previewAantal.textContent = String(aantal);
+    previewSource.textContent = "Manuele invoer";
 
-      const result = buildTicketsFromRows(state.rawRows, state.mapping);
-      state.importedTickets = result.tickets;
-      state.invalidRows = result.invalidRows;
+    miniCode.textContent = code;
+    miniPrijs.textContent = formatPrice(prijs);
+    miniAantal.textContent = String(aantal);
 
-      if (state.importedTickets.length > 0) {
-        const totalLabels = state.importedTickets.reduce((sum, item) => sum + item.aantal, 0);
-        const invalidText = state.invalidRows.length ? ` ${state.invalidRows.length} rij(en) overgeslagen.` : "";
-        setStatus(`${state.fileName} geladen: ${state.importedTickets.length} geldige ticketrij(en), ${totalLabels} label(s).${invalidText}`, "success");
-      } else {
-        setStatus("Geen geldige ticketrijen gevonden in dit bestand.", "error");
-      }
+    summaryBadge.textContent = formatTicketText(aantal);
+  }
 
-      renderImportPreview();
-      updatePreview();
+  function rebuildImportedTickets() {
+    if (!state.rawRows.length) return;
+
+    state.mapping = {
+      code: mapCode ? mapCode.value : "",
+      price: mapPrice ? mapPrice.value : "",
+      quantity: mapQty ? mapQty.value : ""
+    };
+
+    const result = buildTicketsFromRows(state.rawRows, state.mapping);
+    state.importedTickets = result.tickets;
+    state.invalidRows = result.invalidRows;
+
+    if (state.importedTickets.length > 0) {
+      const totalLabels = state.importedTickets.reduce((sum, item) => sum + item.aantal, 0);
+      const invalidText = state.invalidRows.length ? ` ${state.invalidRows.length} rij(en) overgeslagen.` : "";
+      setStatus(`${state.fileName} geladen: ${state.importedTickets.length} geldige ticketrij(en), ${totalLabels} label(s).${invalidText}`, "success");
+    } else {
+      setStatus("Geen geldige ticketrijen gevonden in dit bestand.", "error");
     }
 
-    function handleExcelUpload(event) {
-      const file = event.target.files[0];
+    renderImportPreview();
+    updatePreview();
+  }
 
-      if (!file) {
-        state.importedTickets = [];
-        state.rawRows = [];
-        state.headers = [];
-        state.invalidRows = [];
-        state.fileName = "";
-        state.sheetName = "";
-        mappingPanel.classList.add("hidden");
-        importTools.classList.add("hidden");
-        importPreviewCard.classList.add("hidden");
-        setStatus("Geen bestand geladen.", "neutral");
-        updatePreview();
-        return;
-      }
+  function handleExcelUpload(event) {
+    const file = event.target.files[0];
 
-      const reader = new FileReader();
-
-      reader.onload = function(e) {
-        try {
-          const data = new Uint8Array(e.target.result);
-          const workbook = XLSX.read(data, { type: "array" });
-          const firstSheetName = workbook.SheetNames[0];
-          const worksheet = workbook.Sheets[firstSheetName];
-
-          const aoa = XLSX.utils.sheet_to_json(worksheet, {
-            header: 1,
-            raw: false,
-            defval: ""
-          });
-
-          const { headers, rows } = buildObjectsFromSheet(aoa);
-
-          if (!headers.length || !rows.length) {
-            throw new Error("Leeg of onbruikbaar bestand.");
-          }
-
-          state.fileName = file.name;
-          state.sheetName = firstSheetName;
-          state.headers = headers;
-          state.rawRows = rows;
-          state.mapping = detectColumns(headers, rows);
-
-          refreshMappingUI();
-          rebuildImportedTickets();
-        } catch (error) {
-          state.importedTickets = [];
-          state.rawRows = [];
-          state.headers = [];
-          state.invalidRows = [];
-          state.fileName = file.name;
-          state.sheetName = "";
-          mappingPanel.classList.add("hidden");
-          importTools.classList.add("hidden");
-          importPreviewCard.classList.add("hidden");
-          setStatus("Kon het bestand niet verwerken. Controleer het formaat of probeer een ander werkblad.", "error");
-          updatePreview();
-        }
-      };
-
-      reader.readAsArrayBuffer(file);
-    }
-
-    function createTemplateFile() {
-      const rows = [
-        ["artikelcode", "prijs", "aantal", "opmerking"],
-        ["SHOSTA-1141", 2.00, 3, "Standaard ticket"],
-        ["Museumpas", 0.00, 2, "Gratis toegang"],
-        ["Evenement-Avond", 5.50, 4, "Speciale sessie"]
-      ];
-
-      const worksheet = XLSX.utils.aoa_to_sheet(rows);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Tickets");
-      XLSX.writeFile(workbook, "tickets-voorbeeld.xlsx");
-    }
-
-    function printTicket() {
-      if (state.importedTickets.length > 0) {
-        sessionStorage.setItem("printData", JSON.stringify({
-          mode: "batch",
-          source: "excel",
-          fileName: state.fileName,
-          sheetName: state.sheetName,
-          tickets: state.importedTickets
-        }));
-
-        window.open("print.html", "_blank");
-        return;
-      }
-
-      const code = searchInput.value.trim();
-      const prijs = Number(prijsInput.value);
-      const aantal = Number(aantalInput.value);
-
-      if (!code) {
-        alert("Geef eerst tekst of een artikelcode in.");
-        return;
-      }
-
-      if (isNaN(prijs) || prijs < 0) {
-        alert("Geef een geldige prijs in.");
-        return;
-      }
-
-      if (isNaN(aantal) || aantal < 1) {
-        alert("Geef een geldig aantal in.");
-        return;
-      }
-
-      sessionStorage.setItem("printData", JSON.stringify({
-        mode: "single",
-        source: "manual",
-        tickets: [
-          {
-            artikelcode: code,
-            prijs: prijs,
-            aantal: aantal,
-            qrText: code,
-            extras: []
-          }
-        ]
-      }));
-
-      window.open("print.html", "_blank");
-    }
-
-    function resetFields() {
+    if (!file) {
       state.importedTickets = [];
       state.rawRows = [];
       state.headers = [];
       state.invalidRows = [];
       state.fileName = "";
       state.sheetName = "";
-      state.mapping = { code: "", price: "", quantity: "" };
-
-      searchInput.value = "";
-      prijsInput.value = "2.00";
-      aantalInput.value = "1";
-      excelFileInput.value = "";
-
-      mappingPanel.classList.add("hidden");
-      importTools.classList.add("hidden");
-      importPreviewCard.classList.add("hidden");
+      if (mappingPanel) mappingPanel.classList.add("hidden");
+      if (importTools) importTools.classList.add("hidden");
+      if (importPreviewCard) importPreviewCard.classList.add("hidden");
       setStatus("Geen bestand geladen.", "neutral");
       updatePreview();
+      return;
     }
 
-    searchInput.addEventListener("input", updatePreview);
-    prijsInput.addEventListener("input", updatePreview);
-    aantalInput.addEventListener("input", updatePreview);
-    excelFileInput.addEventListener("change", handleExcelUpload);
-    printButton.addEventListener("click", printTicket);
-    resetButton.addEventListener("click", resetFields);
-    rebuildImportButton.addEventListener("click", rebuildImportedTickets);
-    downloadTemplateButton.addEventListener("click", createTemplateFile);
+    const reader = new FileReader();
 
-    mapCode.addEventListener("change", rebuildImportedTickets);
-    mapPrice.addEventListener("change", rebuildImportedTickets);
-    mapQty.addEventListener("change", rebuildImportedTickets);
+    reader.onload = function(e) {
+      try {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+
+        const aoa = XLSX.utils.sheet_to_json(worksheet, {
+          header: 1,
+          raw: false,
+          defval: ""
+        });
+
+        const { headers, rows } = buildObjectsFromSheet(aoa);
+
+        if (!headers.length || !rows.length) {
+          throw new Error("Leeg of onbruikbaar bestand.");
+        }
+
+        state.fileName = file.name;
+        state.sheetName = firstSheetName;
+        state.headers = headers;
+        state.rawRows = rows;
+        state.mapping = detectColumns(headers, rows);
+
+        refreshMappingUI();
+        rebuildImportedTickets();
+      } catch (error) {
+        state.importedTickets = [];
+        state.rawRows = [];
+        state.headers = [];
+        state.invalidRows = [];
+        state.fileName = file.name;
+        state.sheetName = "";
+        if (mappingPanel) mappingPanel.classList.add("hidden");
+        if (importTools) importTools.classList.add("hidden");
+        if (importPreviewCard) importPreviewCard.classList.add("hidden");
+        setStatus("Kon het bestand niet verwerken. Controleer het formaat of probeer een ander werkblad.", "error");
+        updatePreview();
+      }
+    };
+
+    reader.readAsArrayBuffer(file);
+  }
+
+  function createTemplateFile() {
+    const rows = [
+      ["artikelcode", "prijs", "aantal", "opmerking"],
+      ["SHOSTA-1141", 2.00, 3, "Standaard ticket"],
+      ["Museumpas", 0.00, 2, "Gratis toegang"],
+      ["Evenement-Avond", 5.50, 4, "Speciale sessie"]
+    ];
+
+    const worksheet = XLSX.utils.aoa_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Tickets");
+    XLSX.writeFile(workbook, "tickets-voorbeeld.xlsx");
+  }
+
+  function printTicket() {
+    if (state.importedTickets.length > 0) {
+      sessionStorage.setItem("printData", JSON.stringify({
+        mode: "batch",
+        source: "excel",
+        fileName: state.fileName,
+        sheetName: state.sheetName,
+        tickets: state.importedTickets
+      }));
+
+      window.open("print.html", "_blank");
+      return;
+    }
+
+    const code = searchInput.value.trim();
+    const prijs = Number(prijsInput.value);
+    const aantal = Number(aantalInput.value);
+
+    if (!code) {
+      alert("Geef eerst tekst of een artikelcode in.");
+      return;
+    }
+
+    if (isNaN(prijs) || prijs < 0) {
+      alert("Geef een geldige prijs in.");
+      return;
+    }
+
+    if (isNaN(aantal) || aantal < 1) {
+      alert("Geef een geldig aantal in.");
+      return;
+    }
+
+    sessionStorage.setItem("printData", JSON.stringify({
+      mode: "single",
+      source: "manual",
+      tickets: [
+        {
+          artikelcode: code,
+          prijs: prijs,
+          aantal: aantal,
+          qrText: code,
+          extras: []
+        }
+      ]
+    }));
+
+    window.open("print.html", "_blank");
+  }
+
+  function resetFields() {
+    state.importedTickets = [];
+    state.rawRows = [];
+    state.headers = [];
+    state.invalidRows = [];
+    state.fileName = "";
+    state.sheetName = "";
+    state.mapping = { code: "", price: "", quantity: "" };
+
+    searchInput.value = "";
+    prijsInput.value = "2.00";
+    aantalInput.value = "1";
+    excelFileInput.value = "";
+
+    if (mappingPanel) mappingPanel.classList.add("hidden");
+    if (importTools) importTools.classList.add("hidden");
+    if (importPreviewCard) importPreviewCard.classList.add("hidden");
 
     setStatus("Geen bestand geladen.", "neutral");
     updatePreview();
-  </script>
+  }
+
+  searchInput.addEventListener("input", updatePreview);
+  prijsInput.addEventListener("input", updatePreview);
+  aantalInput.addEventListener("input", updatePreview);
+  excelFileInput.addEventListener("change", handleExcelUpload);
+  printButton.addEventListener("click", printTicket);
+  resetButton.addEventListener("click", resetFields);
+
+  if (rebuildImportButton) {
+    rebuildImportButton.addEventListener("click", rebuildImportedTickets);
+  }
+
+  if (downloadTemplateButton) {
+    downloadTemplateButton.addEventListener("click", createTemplateFile);
+  }
+
+  if (mapCode) mapCode.addEventListener("change", rebuildImportedTickets);
+  if (mapPrice) mapPrice.addEventListener("change", rebuildImportedTickets);
+  if (mapQty) mapQty.addEventListener("change", rebuildImportedTickets);
+
+  setStatus("Geen bestand geladen.", "neutral");
+  updatePreview();
+</script>
+  
 </body>
 </html>
