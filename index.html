@@ -905,6 +905,108 @@
 
     setStatus("Geen bestand geladen.", "neutral");
     updatePreview();
+
+    <!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Print Ticket</title>
+  <link rel="stylesheet" href="print.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+  <div class="screen-toolbar">
+    <button onclick="window.print()">Afdrukken</button>
+  </div>
+
+  <div id="labels"></div>
+
+  <script>
+    const container = document.getElementById("labels");
+
+    let stored = null;
+
+    try {
+      stored = JSON.parse(sessionStorage.getItem("printData"));
+    } catch (error) {
+      stored = null;
+    }
+
+    function truncateText(text, maxLength = 40) {
+      if (!text) return "";
+      const str = String(text).trim();
+      return str.length > maxLength ? str.slice(0, maxLength - 1) + "…" : str;
+    }
+
+    function formatPrice(value) {
+      const amount = Number(value || 0);
+      return "€ " + amount.toFixed(2);
+    }
+
+    function createLabel(ticket) {
+      const page = document.createElement("div");
+      page.className = "page";
+
+      const label = document.createElement("div");
+      label.className = "label";
+
+      const qr = document.createElement("div");
+      qr.className = "qr";
+
+      const priceWrap = document.createElement("div");
+      priceWrap.className = "vertical-block price-block";
+
+      const price = document.createElement("div");
+      price.className = "price";
+      price.textContent = formatPrice(ticket.prijs);
+      priceWrap.appendChild(price);
+
+      const codeWrap = document.createElement("div");
+      codeWrap.className = "vertical-block code-block";
+
+      const code = document.createElement("div");
+      code.className = "code";
+      code.textContent = truncateText(ticket.artikelcode, 40);
+      codeWrap.appendChild(code);
+
+      label.appendChild(qr);
+      label.appendChild(priceWrap);
+      label.appendChild(codeWrap);
+
+      page.appendChild(label);
+      container.appendChild(page);
+
+      new QRCode(qr, {
+        text: ticket.qrText || ticket.artikelcode,
+        width: 120,
+        height: 120,
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    }
+
+    if (!stored || !Array.isArray(stored.tickets) || stored.tickets.length === 0) {
+      const error = document.createElement("p");
+      error.className = "error-message";
+      error.textContent = "Geen geldige printdata gevonden.";
+      container.appendChild(error);
+    } else {
+      stored.tickets.forEach(ticket => {
+        const aantal = Number(ticket.aantal);
+
+        if (!ticket.artikelcode || isNaN(ticket.prijs) || isNaN(aantal) || aantal < 1) {
+          return;
+        }
+
+        for (let i = 0; i < aantal; i++) {
+          createLabel(ticket);
+        }
+      });
+    }
+  </script>
+</body>
+</html>
   </script>
 </body>
 </html>
