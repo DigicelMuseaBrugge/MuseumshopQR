@@ -7,28 +7,19 @@
 :root {
   --bg-main: #eef1f2;
   --bg-soft: #dde5e6;
-
   --panel: #ffffff;
-  --panel-soft: #f7fbfb;
   --line: #d1dadc;
-
   --text: #1f2f31;
   --muted: #66797b;
-
   --accent: #0f766e;
   --accent-dark: #0a5953;
   --accent-soft: #dff2ef;
   --accent-softer: #eef8f6;
-
   --danger-soft: #fff4f4;
   --danger-line: #e6c2c2;
   --danger-text: #8c2f2f;
-
   --shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
-
   --radius-xl: 28px;
-  --radius-lg: 22px;
-  --radius-md: 14px;
 }
 
 html {
@@ -80,7 +71,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  letter-spacing: 0.5px;
 }
 
 .brand-text {
@@ -118,11 +108,9 @@ body {
   transition: 0.2s ease;
 }
 
-.nav-right a:hover,
-.nav-right a:focus-visible {
+.nav-right a:hover {
   background: var(--accent-soft);
   color: var(--accent-dark);
-  outline: none;
 }
 
 .hero {
@@ -159,7 +147,6 @@ body {
   font-size: 42px;
   line-height: 1.08;
   margin-bottom: 14px;
-  color: var(--text);
 }
 
 .subtitle {
@@ -189,22 +176,10 @@ body {
   box-shadow: 0 10px 22px rgba(15, 118, 110, 0.18);
 }
 
-.primary-btn:hover,
-.primary-btn:focus-visible {
-  transform: translateY(-1px);
-  outline: none;
-}
-
 .secondary-btn {
   background: var(--accent-softer);
   color: var(--accent-dark);
   border: 1px solid #cfe6e2;
-}
-
-.secondary-btn:hover,
-.secondary-btn:focus-visible {
-  background: var(--accent-soft);
-  outline: none;
 }
 
 .hero-side {
@@ -300,7 +275,6 @@ body {
 .panel-head h2 {
   font-size: 28px;
   margin-bottom: 6px;
-  color: var(--text);
 }
 
 .panel-head p {
@@ -383,12 +357,6 @@ input[type="file"] {
   color: var(--danger-text);
 }
 
-.import-status.neutral {
-  border-color: #c8dbd8;
-  background: #fff;
-  color: var(--muted);
-}
-
 .mapping-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -433,22 +401,10 @@ input[type="file"] {
   box-shadow: 0 12px 24px rgba(15, 118, 110, 0.20);
 }
 
-.print-btn:hover,
-.print-btn:focus-visible {
-  transform: translateY(-1px);
-  outline: none;
-}
-
 .ghost-btn {
   border: 1px solid #cfe0e3;
   background: #f8fbfb;
   color: var(--accent-dark);
-}
-
-.ghost-btn:hover,
-.ghost-btn:focus-visible {
-  background: var(--accent-soft);
-  outline: none;
 }
 
 .summary-card,
@@ -515,7 +471,6 @@ input[type="file"] {
   text-align: left;
   padding: 14px 16px;
   font-size: 14px;
-  white-space: nowrap;
 }
 
 .summary-table tbody td {
@@ -595,7 +550,6 @@ input[type="file"] {
 .info-panel h3 {
   font-size: 22px;
   margin: 6px 0 12px;
-  color: var(--text);
 }
 
 .info-list {
