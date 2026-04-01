@@ -1,851 +1,909 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-:root {
-  --bg-main: #eef1f2;
-  --bg-soft: #dde5e6;
-
-  --panel: #ffffff;
-  --panel-soft: #f7fbfb;
-  --line: #d1dadc;
-
-  --text: #1f2f31;
-  --muted: #66797b;
-
-  --accent: #0f766e;
-  --accent-dark: #0a5953;
-  --accent-soft: #dff2ef;
-  --accent-softer: #eef8f6;
-
-  --danger-soft: #fff4f4;
-  --danger-line: #e6c2c2;
-  --danger-text: #8c2f2f;
-
-  --shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
-
-  --radius-xl: 28px;
-  --radius-lg: 22px;
-  --radius-md: 14px;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family: Arial, sans-serif;
-  color: var(--text);
-  background:
-    radial-gradient(circle at top left, rgba(15, 118, 110, 0.10), transparent 24%),
-    linear-gradient(180deg, var(--bg-main) 0%, var(--bg-soft) 100%);
-  min-height: 100vh;
-}
-
-.page-shell {
-  max-width: 1260px;
-  margin: 0 auto;
-  padding: 22px;
-}
-
-.navbar {
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  box-shadow: var(--shadow);
-  padding: 14px 18px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-  margin-bottom: 18px;
-}
-
-.nav-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.brand-mark {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-  color: white;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  letter-spacing: 0.5px;
-}
-
-.brand-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.brand-top {
-  font-size: 13px;
-  color: var(--muted);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-}
-
-.brand-bottom {
-  font-size: 16px;
-  color: var(--text);
-  font-weight: 700;
-}
-
-.nav-right {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.nav-right a {
-  text-decoration: none;
-  color: var(--text);
-  font-size: 14px;
-  font-weight: 700;
-  padding: 8px 12px;
-  border-radius: 10px;
-  transition: 0.2s ease;
-}
-
-.nav-right a:hover,
-.nav-right a:focus-visible {
-  background: var(--accent-soft);
-  color: var(--accent-dark);
-  outline: none;
-}
-
-.hero {
-  background: linear-gradient(135deg, #ffffff 0%, #f7fbfb 100%);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow);
-  padding: 28px;
-  margin-bottom: 18px;
-}
-
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1.4fr 0.9fr;
-  gap: 24px;
-  align-items: center;
-}
-
-.hero-content {
-  max-width: 760px;
-}
-
-.eyebrow {
-  display: inline-block;
-  font-size: 12px;
-  text-transform: uppercase;
-  font-weight: 700;
-  letter-spacing: 1.3px;
-  color: var(--accent);
-  margin-bottom: 10px;
-}
-
-.hero h1 {
-  font-size: 42px;
-  line-height: 1.08;
-  margin-bottom: 14px;
-  color: var(--text);
-}
-
-.subtitle {
-  font-size: 17px;
-  line-height: 1.65;
-  color: var(--muted);
-  margin-bottom: 18px;
-}
-
-.hero-actions {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.hero-btn {
-  text-decoration: none;
-  font-weight: 700;
-  padding: 13px 18px;
-  border-radius: 14px;
-  transition: 0.2s ease;
-}
-
-.primary-btn {
-  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-  color: white;
-  box-shadow: 0 10px 22px rgba(15, 118, 110, 0.18);
-}
-
-.primary-btn:hover,
-.primary-btn:focus-visible {
-  transform: translateY(-1px);
-  outline: none;
-}
-
-.secondary-btn {
-  background: var(--accent-softer);
-  color: var(--accent-dark);
-  border: 1px solid #cfe6e2;
-}
-
-.secondary-btn:hover,
-.secondary-btn:focus-visible {
-  background: var(--accent-soft);
-  outline: none;
-}
-
-.hero-side {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.logo-panel {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.logo-card {
-  background: white;
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  height: 92px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 14px;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.04);
-}
-
-.logo-card img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  display: block;
-}
-
-.status-card {
-  background: linear-gradient(135deg, var(--accent-softer), #ffffff);
-  border: 1px solid #cde3e0;
-  border-radius: 18px;
-  padding: 18px;
-}
-
-.status-label {
-  display: inline-block;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-weight: 700;
-  color: var(--accent);
-  margin-bottom: 8px;
-}
-
-.status-card strong {
-  display: block;
-  font-size: 18px;
-  margin-bottom: 8px;
-  color: var(--accent-dark);
-}
-
-.status-card p {
-  color: var(--muted);
-  line-height: 1.55;
-}
-
-.main-grid {
-  display: grid;
-  grid-template-columns: 400px 1fr;
-  gap: 18px;
-  margin-bottom: 18px;
-}
-
-.panel {
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow);
-  padding: 24px;
-}
-
-.panel-head {
-  margin-bottom: 18px;
-}
-
-.section-tag {
-  display: inline-block;
-  background: var(--accent-soft);
-  color: var(--accent-dark);
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-
-.panel-head h2 {
-  font-size: 28px;
-  margin-bottom: 6px;
-  color: var(--text);
-}
-
-.panel-head p {
-  font-size: 15px;
-  line-height: 1.6;
-  color: var(--muted);
-}
-
-.field-group {
-  margin-bottom: 16px;
-}
-
-.small-field {
-  margin-bottom: 0;
-}
-
-label {
-  display: block;
-  font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 8px;
-  color: var(--accent-dark);
-}
-
-input,
-select {
-  width: 100%;
-  height: 56px;
-  border: 1px solid #cbd7d9;
-  border-radius: 14px;
-  padding: 0 16px;
-  font-size: 16px;
-  color: var(--text);
-  background: #fcfefe;
-  outline: none;
-  transition: 0.2s ease;
-}
-
-input:focus,
-select:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.10);
-}
-
-input[type="file"] {
-  width: 100%;
-  height: auto;
-  padding: 12px 14px;
-  line-height: 1.3;
-  cursor: pointer;
-}
-
-.import-card {
-  margin-bottom: 18px;
-  background: linear-gradient(180deg, #fbfefe 0%, #f4fbfa 100%);
-  border: 1px solid #d6e7e4;
-  border-radius: 18px;
-  padding: 16px;
-}
-
-.import-status {
-  border: 1px dashed #c8dbd8;
-  border-radius: 14px;
-  padding: 12px 14px;
-  font-size: 14px;
-  line-height: 1.55;
-  background: #fff;
-  color: var(--muted);
-}
-
-.import-status.success {
-  border-color: #9dcfc1;
-  background: #f4fbf8;
-  color: var(--accent-dark);
-}
-
-.import-status.error {
-  border-color: var(--danger-line);
-  background: var(--danger-soft);
-  color: var(--danger-text);
-}
-
-.import-status.neutral {
-  border-color: #c8dbd8;
-  background: #fff;
-  color: var(--muted);
-}
-
-.mapping-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-  margin-top: 14px;
-}
-
-.import-tools {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 14px;
-}
-
-.compact-btn {
-  height: 46px;
-  font-size: 14px;
-}
-
-.button-group {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-  margin-top: 6px;
-}
-
-.print-btn,
-.ghost-btn {
-  width: 100%;
-  height: 56px;
-  border-radius: 14px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.print-btn {
-  border: none;
-  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-  color: white;
-  box-shadow: 0 12px 24px rgba(15, 118, 110, 0.20);
-}
-
-.print-btn:hover,
-.print-btn:focus-visible {
-  transform: translateY(-1px);
-  outline: none;
-}
-
-.ghost-btn {
-  border: 1px solid #cfe0e3;
-  background: #f8fbfb;
-  color: var(--accent-dark);
-}
-
-.ghost-btn:hover,
-.ghost-btn:focus-visible {
-  background: var(--accent-soft);
-  outline: none;
-}
-
-.summary-card,
-.import-preview-card {
-  background: linear-gradient(180deg, #ffffff 0%, #f8fbfb 100%);
-  border: 1px solid #d9e4e5;
-  border-radius: 22px;
-  padding: 20px;
-}
-
-.import-preview-card {
-  margin-top: 18px;
-}
-
-.summary-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-}
-
-.summary-chip {
-  background: var(--accent-soft);
-  color: var(--accent-dark);
-  display: inline-block;
-  padding: 7px 11px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.summary-badge {
-  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-  color: white;
-  padding: 8px 12px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.neutral-badge {
-  background: #eaf1f1;
-  color: var(--text);
-}
-
-.table-wrap {
-  overflow-x: auto;
-  margin-bottom: 16px;
-}
-
-.summary-table {
-  width: 100%;
-  border-collapse: collapse;
-  overflow: hidden;
-  border-radius: 16px;
-  border: 1px solid var(--line);
-}
-
-.summary-table thead th {
-  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-  color: white;
-  text-align: left;
-  padding: 14px 16px;
-  font-size: 14px;
-  white-space: nowrap;
-}
-
-.summary-table tbody td {
-  padding: 14px 16px;
-  border-top: 1px solid var(--line);
-  font-size: 15px;
-  vertical-align: top;
-}
-
-.summary-table tbody tr:nth-child(even) {
-  background: #f7fafb;
-}
-
-.preview-cards,
-.import-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  margin-bottom: 16px;
-}
-
-.import-stats {
-  grid-template-columns: repeat(4, 1fr);
-}
-
-.mini-info-card,
-.stat-pill {
-  background: white;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 16px;
-}
-
-.mini-title,
-.stat-pill span {
-  display: block;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--muted);
-  margin-bottom: 8px;
-  font-weight: 700;
-}
-
-.mini-info-card strong,
-.stat-pill strong {
-  font-size: 18px;
-  color: var(--accent-dark);
-  word-break: break-word;
-}
-
-.preview-note {
-  margin-top: 6px;
-  background: #f6fbfa;
-  border: 1px dashed #cfe1df;
-  border-radius: 16px;
-  padding: 14px 16px;
-  color: var(--muted);
-  line-height: 1.6;
-  font-size: 14px;
-}
-
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}
-
-.info-panel {
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid var(--line);
-  border-radius: 22px;
-  box-shadow: var(--shadow);
-  padding: 22px;
-}
-
-.info-panel h3 {
-  font-size: 22px;
-  margin: 6px 0 12px;
-  color: var(--text);
-}
-
-.info-list {
-  padding-left: 18px;
-  color: var(--muted);
-  line-height: 1.8;
-  font-size: 15px;
-}
-
-.hidden {
-  display: none !important;
-}
-
-@media (max-width: 1180px) {
-  .hero-grid,
-  .main-grid,
-  .info-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .preview-cards,
-  .import-stats {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 760px) {
-  .navbar {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .nav-right {
-    width: 100%;
-  }
-
-  .hero h1 {
-    font-size: 32px;
-  }
-
-  .page-shell {
-    padding: 14px;
-  }
-
-  .hero,
-  .panel,
-  .info-panel {
-    padding: 20px;
-  }
-
-  .logo-panel,
-  .preview-cards,
-  .import-stats,
-  .import-tools {
-    grid-template-columns: 1fr;
-  }
-
-  .logo-card {
-    height: 84px;
-  }
-  #importCard,
-#importPreviewCard,
-#uploadStatus,
-#mappingPanel,
-#importTools,
-#importMetaBadge,
-#importFileName,
-#importSheetName,
-#importValidCount,
-#importInvalidCount,
-#importErrorsNote {
-  display: none !important;
-
-  @page {
-  size: 38mm 25mm;
-  margin: 0;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html, body {
-  width: 38mm;
-  height: 25mm;
-  background: #fff;
-  font-family: Arial, sans-serif;
-  color: #000;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-}
-
-#labels {
-  width: 38mm;
-}
-
-.page {
-  width: 38mm;
-  height: 25mm;
-  page-break-after: always;
-  break-after: page;
-  overflow: hidden;
-}
-
-.page:last-child {
-  page-break-after: auto;
-  break-after: auto;
-}
-
-.label {
-  width: 38mm;
-  height: 25mm;
-  display: grid;
-  grid-template-columns: 16mm 9mm 11mm;
-  align-items: center;
-  justify-items: center;
-  padding: 1mm 1mm 1mm 1mm;
-  overflow: hidden;
-  background: #fff;
-}
-
-.qr {
-  width: 15mm;
-  height: 15mm;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.qr img,
-.qr canvas {
-  width: 15mm !important;
-  height: 15mm !important;
-  display: block;
-}
-
-.vertical-block {
-  width: 100%;
-  height: 22mm;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.vertical-block > div {
-  transform: rotate(90deg);
-  transform-origin: center center;
-  white-space: nowrap;
-  line-height: 1;
-  text-align: center;
-  color: #000;
-}
-
-.price-block {
-  height: 22mm;
-}
-
-.code-block {
-  height: 22mm;
-}
-
-.price {
-  font-size: 8.2pt;
-  font-weight: 700;
-  letter-spacing: 0;
-}
-
-.code {
-  font-size: 6.4pt;
-  font-weight: 700;
-  max-width: none;
-  letter-spacing: 0;
-}
-
-.screen-toolbar {
-  position: fixed;
-  top: 12px;
-  right: 12px;
-  z-index: 1000;
-}
-
-.screen-toolbar button {
-  border: none;
-  background: #0f766e;
-  color: #fff;
-  padding: 10px 14px;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.error-message {
-  padding: 10px;
-  font-size: 14px;
-}
-
-@media screen {
-  html, body {
-    width: 100%;
-    min-height: 100vh;
-    background: linear-gradient(180deg, #eef8f7 0%, #dff1ee 100%);
-  }
-
-  body {
-    padding: 24px;
-  }
-
-  #labels {
-    width: auto;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 18px;
-    justify-content: center;
-  }
-
-  .page {
-    width: 38mm;
-    height: 25mm;
-    background: #fff;
-    box-shadow: 0 8px 20px rgba(16, 72, 68, 0.14);
-  }
-}
-
-@media print {
-  html, body {
-    width: 38mm;
-    height: 25mm;
-    background: #fff;
-  }
-
-  body {
-    margin: 0;
-    padding: 0;
-  }
-
-  .screen-toolbar {
-    display: none;
-  }
-
-  .page {
-    margin: 0;
-    box-shadow: none;
-  }
-}
-}
-}
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Musea Brugge | QR Ticket Generator</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+  <div class="page-shell">
+
+    <nav class="navbar">
+      <div class="nav-left">
+        <div class="brand-mark">MB</div>
+        <div class="brand-text">
+          <span class="brand-top">Musea Brugge</span>
+          <span class="brand-bottom">QR Ticket Generator</span>
+        </div>
+      </div>
+
+      <div class="nav-right">
+        <a href="#ticket-invoer">Ticket invoer</a>
+        <a href="#overzicht">Overzicht</a>
+        <a href="#uitleg">Uitleg</a>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <p class="eyebrow">Musea Brugge</p>
+          <h1>Professioneel ticketsysteem voor labels en QR-codes</h1>
+          <p class="subtitle">
+            Maak snel tickets via manuele invoer of upload een Excel-bestand.
+            Het systeem probeert automatisch kolommen en layouts te herkennen
+            en zet tickets klaar voor afdruk.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#ticket-invoer" class="hero-btn primary-btn">Start ticket maken</a>
+            <a href="#overzicht" class="hero-btn secondary-btn">Bekijk overzicht</a>
+          </div>
+        </div>
+
+        <div class="hero-side">
+          <div class="logo-panel">
+            <div class="logo-card">
+              <img src="Logo_CultuurCentrum_70x140mm_zw.webp" alt="Musea Brugge logo">
+            </div>
+            <div class="logo-card">
+              <img src="downloaden123.png" alt="Musea Brugge logo 2">
+            </div>
+          </div>
+
+          <div class="status-card">
+            <span class="status-label">Systeemstatus</span>
+            <strong>Klaar om tickets te genereren</strong>
+            <p>Vrije invoer, automatische Excel-herkenning, batch-print en live controle voor afdruk.</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-grid">
+      <section class="panel input-panel" id="ticket-invoer">
+        <div class="panel-head">
+          <span class="section-tag">Invoer</span>
+          <h2>Ticket invullen</h2>
+          <p>Vul handmatig één ticket in of upload een Excel-bestand voor meerdere labels tegelijk.</p>
+        </div>
+
+        <div class="field-group">
+          <label for="search">Tekst / artikelcode</label>
+          <input id="search" type="text" placeholder="Bijv. SHOSTA-1141 of vrije tekst" autocomplete="off">
+        </div>
+
+        <div class="field-group">
+          <label for="prijs">Prijs</label>
+          <input id="prijs" type="number" placeholder="Bijv. 2.00" step="0.01" min="0" value="2.00">
+        </div>
+
+        <div class="field-group">
+          <label for="aantal">Aantal tickets</label>
+          <input id="aantal" type="number" value="1" min="1">
+        </div>
+
+        <div class="field-group upload-field">
+          <label for="excelFile">Upload bestand</label>
+          <input id="excelFile" type="file" accept=".xlsx,.xls,.csv,.ods">
+        </div>
+
+        <div class="import-card" id="importCard">
+          <div class="import-status" id="uploadStatus">Geen bestand geladen.</div>
+
+          <div class="mapping-grid hidden" id="mappingPanel">
+            <div class="field-group small-field">
+              <label for="mapCode">Kolom voor tekst / code</label>
+              <select id="mapCode"></select>
+            </div>
+
+            <div class="field-group small-field">
+              <label for="mapPrice">Kolom voor prijs</label>
+              <select id="mapPrice"></select>
+            </div>
+
+            <div class="field-group small-field">
+              <label for="mapQty">Kolom voor aantal</label>
+              <select id="mapQty"></select>
+            </div>
+          </div>
+
+          <div class="import-tools hidden" id="importTools">
+            <button class="ghost-btn compact-btn" id="rebuildImportButton" type="button">Import opnieuw opbouwen</button>
+            <button class="ghost-btn compact-btn" id="downloadTemplateButton" type="button">Excel voorbeeld downloaden</button>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button class="print-btn" id="printButton">Tickets afdrukken</button>
+          <button class="ghost-btn" id="resetButton" type="button">Velden leegmaken</button>
+        </div>
+      </section>
+
+      <section class="panel preview-panel" id="overzicht">
+        <div class="panel-head">
+          <span class="section-tag">Overzicht</span>
+          <h2>Ingevoerde gegevens</h2>
+          <p>Controleer hieronder alle waarden voor je afdrukt.</p>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-top">
+            <div class="summary-chip">Live overzicht</div>
+            <div class="summary-badge" id="summaryBadge">1 ticket</div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="summary-table">
+              <thead>
+                <tr>
+                  <th>Veld</th>
+                  <th>Waarde</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Tekst / artikelcode</td>
+                  <td id="previewCode">lalal</td>
+                </tr>
+                <tr>
+                  <td>Prijs</td>
+                  <td id="previewPrijs">€ 2,00</td>
+                </tr>
+                <tr>
+                  <td>Aantal</td>
+                  <td id="previewAantal">1</td>
+                </tr>
+                <tr>
+                  <td>Bron</td>
+                  <td id="previewSource">Manuele invoer</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="preview-cards">
+            <div class="mini-info-card">
+              <span class="mini-title">QR-bron</span>
+              <strong id="miniCode">lalal</strong>
+            </div>
+
+            <div class="mini-info-card">
+              <span class="mini-title">Te printen prijs</span>
+              <strong id="miniPrijs">€ 2,00</strong>
+            </div>
+
+            <div class="mini-info-card">
+              <span class="mini-title">Aantal labels</span>
+              <strong id="miniAantal">1</strong>
+            </div>
+          </div>
+
+          <div class="preview-note">
+            Bij Excel-import probeert het systeem automatisch kolommen te herkennen en tickets correct op te bouwen voor de printpagina.
+          </div>
+        </div>
+
+        <div class="import-preview-card hidden" id="importPreviewCard">
+          <div class="summary-top import-preview-head">
+            <div class="summary-chip">Excel controle</div>
+            <div class="summary-badge neutral-badge" id="importMetaBadge">0 rijen</div>
+          </div>
+
+          <div class="import-stats" id="importStats">
+            <div class="stat-pill"><span>Bestand</span><strong id="importFileName">—</strong></div>
+            <div class="stat-pill"><span>Blad</span><strong id="importSheetName">—</strong></div>
+            <div class="stat-pill"><span>Geldige tickets</span><strong id="importValidCount">0</strong></div>
+            <div class="stat-pill"><span>Ongeldige rijen</span><strong id="importInvalidCount">0</strong></div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="summary-table import-table">
+              <thead id="importPreviewHead"></thead>
+              <tbody id="importPreviewBody"></tbody>
+            </table>
+          </div>
+
+          <div class="preview-note" id="importErrorsNote">
+            Geen importfouten.
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <section class="info-grid" id="uitleg">
+      <div class="info-panel">
+        <span class="section-tag">Werkwijze</span>
+        <h3>Hoe werkt het?</h3>
+        <ul class="info-list">
+          <li>Typ een tekst of artikelcode in of upload een Excel-bestand.</li>
+          <li>Het systeem detecteert kolommen voor code, prijs en aantal.</li>
+          <li>Controleer het overzicht.</li>
+          <li>Druk af via dezelfde printknop.</li>
+        </ul>
+      </div>
+
+      <div class="info-panel">
+        <span class="section-tag">Print</span>
+        <h3>Voor Zebra labelprinter</h3>
+        <ul class="info-list">
+          <li>Gebruik het juiste etiketformaat.</li>
+          <li>Zet schaal altijd op 100%.</li>
+          <li>Schakel kop- en voetteksten uit.</li>
+          <li>Controleer lange codes vooraf in de preview.</li>
+        </ul>
+      </div>
+
+      <div class="info-panel">
+        <span class="section-tag">Voordeel</span>
+        <h3>Waarom deze opzet?</h3>
+        <ul class="info-list">
+          <li>Werkt met uiteenlopende Excel-layouts.</li>
+          <li>Snelle batch-print zonder telkens code te wijzigen.</li>
+          <li>Duidelijke controle voor afdruk.</li>
+          <li>Geschikt voor online gebruik en herhaald gebruik.</li>
+        </ul>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    const searchInput = document.getElementById("search");
+    const prijsInput = document.getElementById("prijs");
+    const aantalInput = document.getElementById("aantal");
+    const excelFileInput = document.getElementById("excelFile");
+    const printButton = document.getElementById("printButton");
+    const resetButton = document.getElementById("resetButton");
+    const rebuildImportButton = document.getElementById("rebuildImportButton");
+    const downloadTemplateButton = document.getElementById("downloadTemplateButton");
+
+    const previewCode = document.getElementById("previewCode");
+    const previewPrijs = document.getElementById("previewPrijs");
+    const previewAantal = document.getElementById("previewAantal");
+    const previewSource = document.getElementById("previewSource");
+
+    const miniCode = document.getElementById("miniCode");
+    const miniPrijs = document.getElementById("miniPrijs");
+    const miniAantal = document.getElementById("miniAantal");
+    const summaryBadge = document.getElementById("summaryBadge");
+
+    const uploadStatus = document.getElementById("uploadStatus");
+    const mappingPanel = document.getElementById("mappingPanel");
+    const importTools = document.getElementById("importTools");
+    const mapCode = document.getElementById("mapCode");
+    const mapPrice = document.getElementById("mapPrice");
+    const mapQty = document.getElementById("mapQty");
+
+    const importPreviewCard = document.getElementById("importPreviewCard");
+    const importMetaBadge = document.getElementById("importMetaBadge");
+    const importFileName = document.getElementById("importFileName");
+    const importSheetName = document.getElementById("importSheetName");
+    const importValidCount = document.getElementById("importValidCount");
+    const importInvalidCount = document.getElementById("importInvalidCount");
+    const importPreviewHead = document.getElementById("importPreviewHead");
+    const importPreviewBody = document.getElementById("importPreviewBody");
+    const importErrorsNote = document.getElementById("importErrorsNote");
+
+    const state = {
+      importedTickets: [],
+      rawRows: [],
+      headers: [],
+      fileName: "",
+      sheetName: "",
+      invalidRows: [],
+      mapping: {
+        code: "",
+        price: "",
+        quantity: ""
+      }
+    };
+
+    const aliases = {
+      code: [
+        "artikelcode", "artikel", "code", "ticket", "ticketcode", "item", "itemcode",
+        "naam", "titel", "beschrijving", "omschrijving", "product", "label", "reference",
+        "ref", "sku", "barcode", "omschrijving ticket"
+      ],
+      price: [
+        "prijs", "price", "bedrag", "amount", "tarief", "value", "euro", "kostprijs",
+        "salesprice", "ticketprijs", "prijs euro"
+      ],
+      quantity: [
+        "aantal", "qty", "quantity", "count", "labels", "stuks", "pieces", "copies",
+        "copie", "print", "prints", "number", "aantal labels"
+      ]
+    };
+
+    function formatTicketText(aantal) {
+      return aantal === 1 ? "1 ticket" : `${aantal} tickets`;
+    }
+
+    function formatPrice(value) {
+      const amount = Number(value);
+      if (isNaN(amount)) return "€ 0,00";
+      return new Intl.NumberFormat("nl-BE", {
+        style: "currency",
+        currency: "EUR"
+      }).format(amount);
+    }
+
+    function setStatus(message, type = "neutral") {
+      uploadStatus.textContent = message;
+      uploadStatus.className = "import-status";
+      uploadStatus.classList.add(type);
+    }
+
+    function cleanCell(value) {
+      if (value === null || value === undefined) return "";
+      if (typeof value === "number") return String(value);
+      return String(value).trim();
+    }
+
+    function parseFlexibleNumber(value) {
+      if (typeof value === "number") return value;
+      if (value === null || value === undefined) return NaN;
+
+      let text = String(value).trim();
+      if (!text) return NaN;
+
+      text = text
+        .replace(/\s/g, "")
+        .replace(/€/g, "")
+        .replace(/[A-Za-z]/g, "");
+
+      const hasComma = text.includes(",");
+      const hasDot = text.includes(".");
+
+      if (hasComma && hasDot) {
+        if (text.lastIndexOf(",") > text.lastIndexOf(".")) {
+          text = text.replace(/\./g, "").replace(",", ".");
+        } else {
+          text = text.replace(/,/g, "");
+        }
+      } else if (hasComma) {
+        text = text.replace(",", ".");
+      }
+
+      const num = Number(text);
+      return Number.isFinite(num) ? num : NaN;
+    }
+
+    function isMostlyNumericColumn(columnName, rows) {
+      let numeric = 0;
+      let total = 0;
+
+      rows.slice(0, 25).forEach(row => {
+        const value = row[columnName];
+        if (value === "" || value === null || value === undefined) return;
+        total++;
+        if (!isNaN(parseFlexibleNumber(value))) numeric++;
+      });
+
+      return total > 0 && numeric / total >= 0.7;
+    }
+
+    function isMostlyIntegerSmallColumn(columnName, rows) {
+      let matches = 0;
+      let total = 0;
+
+      rows.slice(0, 25).forEach(row => {
+        const value = row[columnName];
+        if (value === "" || value === null || value === undefined) return;
+        const num = parseFlexibleNumber(value);
+        if (isNaN(num)) return;
+        total++;
+        if (Number.isInteger(num) && num >= 0 && num <= 10000) matches++;
+      });
+
+      return total > 0 && matches / total >= 0.75;
+    }
+
+    function normalizeHeaderName(name, index) {
+      const base = cleanCell(name) || `Kolom ${index + 1}`;
+      return base.replace(/\s+/g, " ").trim();
+    }
+
+    function uniquifyHeaders(headers) {
+      const seen = new Map();
+
+      return headers.map(header => {
+        const key = header.toLowerCase();
+        const count = seen.get(key) || 0;
+        seen.set(key, count + 1);
+        return count === 0 ? header : `${header} (${count + 1})`;
+      });
+    }
+
+    function rowKeywordScore(row) {
+      const values = row.map(cleanCell).filter(Boolean);
+      if (!values.length) return -100;
+
+      let score = 0;
+      values.forEach(cell => {
+        const lower = cell.toLowerCase();
+        Object.values(aliases).flat().forEach(alias => {
+          if (lower.includes(alias)) score += 3;
+        });
+        if (/[A-Za-z]/.test(cell)) score += 0.6;
+        if (!isNaN(parseFlexibleNumber(cell))) score -= 0.4;
+      });
+
+      if (values.length >= 2) score += 1;
+      return score;
+    }
+
+    function detectHeaderRow(aoa) {
+      const limit = Math.min(10, aoa.length);
+      let bestIndex = 0;
+      let bestScore = -Infinity;
+
+      for (let i = 0; i < limit; i++) {
+        const score = rowKeywordScore(aoa[i] || []);
+        if (score > bestScore) {
+          bestScore = score;
+          bestIndex = i;
+        }
+      }
+
+      return bestScore >= 2 ? bestIndex : 0;
+    }
+
+    function buildObjectsFromSheet(aoa) {
+      const nonEmptyRows = aoa
+        .map(row => Array.isArray(row) ? row : [])
+        .filter(row => row.some(cell => cleanCell(cell) !== ""));
+
+      if (!nonEmptyRows.length) {
+        return { headers: [], rows: [] };
+      }
+
+      const headerIndex = detectHeaderRow(nonEmptyRows);
+      const headerRow = nonEmptyRows[headerIndex] || [];
+      const headers = uniquifyHeaders(headerRow.map((cell, idx) => normalizeHeaderName(cell, idx)));
+
+      const rows = nonEmptyRows.slice(headerIndex + 1).map((row, index) => {
+        const obj = {};
+        headers.forEach((header, colIdx) => {
+          obj[header] = cleanCell(row[colIdx] ?? "");
+        });
+        obj.__rowNumber = headerIndex + 2 + index;
+        return obj;
+      });
+
+      return { headers, rows };
+    }
+
+    function detectColumns(headers, rows) {
+      const result = { code: "", price: "", quantity: "" };
+
+      function headerScore(header, target) {
+        const normalized = header.toLowerCase();
+        let score = 0;
+        aliases[target].forEach(alias => {
+          if (normalized === alias) score += 12;
+          else if (normalized.includes(alias)) score += 6;
+        });
+
+        if (target === "price" && isMostlyNumericColumn(header, rows)) score += 4;
+        if (target === "quantity" && isMostlyIntegerSmallColumn(header, rows)) score += 5;
+        if (target === "code" && !isMostlyNumericColumn(header, rows)) score += 2;
+
+        return score;
+      }
+
+      const available = [...headers];
+
+      ["code", "price", "quantity"].forEach(target => {
+        let bestHeader = "";
+        let bestScore = -Infinity;
+
+        available.forEach(header => {
+          const score = headerScore(header, target);
+          if (score > bestScore) {
+            bestHeader = header;
+            bestScore = score;
+          }
+        });
+
+        if (bestHeader && bestScore > 0) {
+          result[target] = bestHeader;
+          const index = available.indexOf(bestHeader);
+          if (index >= 0) available.splice(index, 1);
+        }
+      });
+
+      if (!result.code) {
+        result.code = headers.find(h => !isMostlyNumericColumn(h, rows)) || headers[0] || "";
+      }
+
+      if (!result.price) {
+        result.price = headers.find(h => h !== result.code && isMostlyNumericColumn(h, rows)) || "";
+      }
+
+      if (!result.quantity) {
+        result.quantity = headers.find(h => h !== result.code && h !== result.price && isMostlyIntegerSmallColumn(h, rows)) || "";
+      }
+
+      return result;
+    }
+
+    function firstUsefulText(row, excludedHeaders = []) {
+      const excluded = new Set(excludedHeaders.filter(Boolean));
+      for (const key of Object.keys(row)) {
+        if (key === "__rowNumber" || excluded.has(key)) continue;
+        const value = cleanCell(row[key]);
+        if (!value) continue;
+        if (isNaN(parseFlexibleNumber(value)) || /[A-Za-z]/.test(value)) return value;
+      }
+      return "";
+    }
+
+    function buildTicketsFromRows(rows, mapping) {
+      const tickets = [];
+      const invalidRows = [];
+
+      rows.forEach(row => {
+        const codeHeader = mapping.code;
+        const priceHeader = mapping.price;
+        const quantityHeader = mapping.quantity;
+
+        let artikelcode = cleanCell(row[codeHeader]);
+        const prijsValue = priceHeader ? parseFlexibleNumber(row[priceHeader]) : NaN;
+        const qtyValue = quantityHeader ? parseFlexibleNumber(row[quantityHeader]) : NaN;
+
+        if (!artikelcode) {
+          artikelcode = firstUsefulText(row, [priceHeader, quantityHeader]);
+        }
+
+        const prijs = !isNaN(prijsValue) && prijsValue >= 0 ? prijsValue : 0;
+        const aantal = !isNaN(qtyValue) && qtyValue >= 1 ? Math.floor(qtyValue) : 1;
+
+        const extras = Object.keys(row)
+          .filter(key => key !== "__rowNumber" && ![codeHeader, priceHeader, quantityHeader].includes(key))
+          .map(key => ({
+            label: key,
+            value: cleanCell(row[key])
+          }))
+          .filter(item => item.value !== "");
+
+        const isEmptyRow =
+          !artikelcode &&
+          extras.length === 0 &&
+          (isNaN(prijsValue) || prijsValue === 0) &&
+          (isNaN(qtyValue) || qtyValue === 0);
+
+        if (isEmptyRow) {
+          return;
+        }
+
+        if (!artikelcode) {
+          invalidRows.push({
+            rowNumber: row.__rowNumber || "?",
+            reason: "Geen bruikbare tekst of code gevonden."
+          });
+          return;
+        }
+
+        tickets.push({
+          artikelcode,
+          prijs,
+          aantal,
+          qrText: artikelcode,
+          extras,
+          rowNumber: row.__rowNumber || ""
+        });
+      });
+
+      return { tickets, invalidRows };
+    }
+
+    function fillMappingSelect(select, headers, selectedValue) {
+      select.innerHTML = "";
+
+      const emptyOption = document.createElement("option");
+      emptyOption.value = "";
+      emptyOption.textContent = "Niet gebruiken";
+      select.appendChild(emptyOption);
+
+      headers.forEach(header => {
+        const option = document.createElement("option");
+        option.value = header;
+        option.textContent = header;
+        if (header === selectedValue) option.selected = true;
+        select.appendChild(option);
+      });
+    }
+
+    function refreshMappingUI() {
+      if (!state.headers.length) {
+        mappingPanel.classList.add("hidden");
+        importTools.classList.add("hidden");
+        return;
+      }
+
+      fillMappingSelect(mapCode, state.headers, state.mapping.code);
+      fillMappingSelect(mapPrice, state.headers, state.mapping.price);
+      fillMappingSelect(mapQty, state.headers, state.mapping.quantity);
+
+      mappingPanel.classList.remove("hidden");
+      importTools.classList.remove("hidden");
+    }
+
+    function renderImportPreview() {
+      if (!state.headers.length || !state.rawRows.length) {
+        importPreviewCard.classList.add("hidden");
+        return;
+      }
+
+      importPreviewCard.classList.remove("hidden");
+      importMetaBadge.textContent = `${state.rawRows.length} rijen`;
+      importFileName.textContent = state.fileName || "—";
+      importSheetName.textContent = state.sheetName || "—";
+      importValidCount.textContent = String(state.importedTickets.length);
+      importInvalidCount.textContent = String(state.invalidRows.length);
+
+      importPreviewHead.innerHTML = "";
+      importPreviewBody.innerHTML = "";
+
+      const headRow = document.createElement("tr");
+      state.headers.slice(0, 6).forEach(header => {
+        const th = document.createElement("th");
+        th.textContent = header;
+        headRow.appendChild(th);
+      });
+      importPreviewHead.appendChild(headRow);
+
+      state.rawRows.slice(0, 8).forEach(row => {
+        const tr = document.createElement("tr");
+        state.headers.slice(0, 6).forEach(header => {
+          const td = document.createElement("td");
+          td.textContent = cleanCell(row[header]) || "—";
+          tr.appendChild(td);
+        });
+        importPreviewBody.appendChild(tr);
+      });
+
+      if (state.invalidRows.length) {
+        const messages = state.invalidRows.slice(0, 5).map(item => `Rij ${item.rowNumber}: ${item.reason}`);
+        importErrorsNote.textContent = `Opmerking: ${messages.join(" | ")}`;
+      } else {
+        importErrorsNote.textContent = "Geen importfouten.";
+      }
+    }
+
+    function updatePreview() {
+      if (state.importedTickets.length > 0) {
+        const totaalLabels = state.importedTickets.reduce((sum, item) => sum + item.aantal, 0);
+        const eerste = state.importedTickets[0];
+        const uniekePrijzen = [...new Set(state.importedTickets.map(item => Number(item.prijs).toFixed(2)))];
+
+        previewCode.textContent = state.importedTickets.length === 1
+          ? eerste.artikelcode
+          : `${eerste.artikelcode} + ${state.importedTickets.length - 1} andere`;
+        previewPrijs.textContent = uniekePrijzen.length === 1
+          ? formatPrice(uniekePrijzen[0])
+          : "Meerdere prijzen";
+        previewAantal.textContent = String(totaalLabels);
+        previewSource.textContent = `Excel import (${state.fileName || "bestand"})`;
+
+        miniCode.textContent = `${state.importedTickets.length} ticketrij(en)`;
+        miniPrijs.textContent = uniekePrijzen.length === 1 ? formatPrice(uniekePrijzen[0]) : "Variabel";
+        miniAantal.textContent = String(totaalLabels);
+
+        summaryBadge.textContent = formatTicketText(totaalLabels);
+        return;
+      }
+
+      const code = searchInput.value.trim() || "lalal";
+      const prijs = Number(prijsInput.value || 0);
+      const aantal = Number(aantalInput.value || 1);
+
+      previewCode.textContent = code;
+      previewPrijs.textContent = formatPrice(prijs);
+      previewAantal.textContent = String(aantal);
+      previewSource.textContent = "Manuele invoer";
+
+      miniCode.textContent = code;
+      miniPrijs.textContent = formatPrice(prijs);
+      miniAantal.textContent = String(aantal);
+
+      summaryBadge.textContent = formatTicketText(aantal);
+    }
+
+    function rebuildImportedTickets() {
+      if (!state.rawRows.length) return;
+
+      state.mapping = {
+        code: mapCode.value,
+        price: mapPrice.value,
+        quantity: mapQty.value
+      };
+
+      const result = buildTicketsFromRows(state.rawRows, state.mapping);
+      state.importedTickets = result.tickets;
+      state.invalidRows = result.invalidRows;
+
+      if (state.importedTickets.length > 0) {
+        const totalLabels = state.importedTickets.reduce((sum, item) => sum + item.aantal, 0);
+        const invalidText = state.invalidRows.length ? ` ${state.invalidRows.length} rij(en) overgeslagen.` : "";
+        setStatus(`${state.fileName} geladen: ${state.importedTickets.length} geldige ticketrij(en), ${totalLabels} label(s).${invalidText}`, "success");
+      } else {
+        setStatus("Geen geldige ticketrijen gevonden in dit bestand.", "error");
+      }
+
+      renderImportPreview();
+      updatePreview();
+    }
+
+    function handleExcelUpload(event) {
+      const file = event.target.files[0];
+
+      if (!file) {
+        state.importedTickets = [];
+        state.rawRows = [];
+        state.headers = [];
+        state.invalidRows = [];
+        state.fileName = "";
+        state.sheetName = "";
+        mappingPanel.classList.add("hidden");
+        importTools.classList.add("hidden");
+        importPreviewCard.classList.add("hidden");
+        setStatus("Geen bestand geladen.", "neutral");
+        updatePreview();
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = function(e) {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: "array" });
+          const firstSheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[firstSheetName];
+
+          const aoa = XLSX.utils.sheet_to_json(worksheet, {
+            header: 1,
+            raw: false,
+            defval: ""
+          });
+
+          const { headers, rows } = buildObjectsFromSheet(aoa);
+
+          if (!headers.length || !rows.length) {
+            throw new Error("Leeg of onbruikbaar bestand.");
+          }
+
+          state.fileName = file.name;
+          state.sheetName = firstSheetName;
+          state.headers = headers;
+          state.rawRows = rows;
+          state.mapping = detectColumns(headers, rows);
+
+          refreshMappingUI();
+          rebuildImportedTickets();
+        } catch (error) {
+          state.importedTickets = [];
+          state.rawRows = [];
+          state.headers = [];
+          state.invalidRows = [];
+          state.fileName = file.name;
+          state.sheetName = "";
+          mappingPanel.classList.add("hidden");
+          importTools.classList.add("hidden");
+          importPreviewCard.classList.add("hidden");
+          setStatus("Kon het bestand niet verwerken. Controleer het formaat of probeer een ander werkblad.", "error");
+          updatePreview();
+        }
+      };
+
+      reader.readAsArrayBuffer(file);
+    }
+
+    function createTemplateFile() {
+      const rows = [
+        ["artikelcode", "prijs", "aantal", "opmerking"],
+        ["SHOSTA-1141", 2.00, 3, "Standaard ticket"],
+        ["Museumpas", 0.00, 2, "Gratis toegang"],
+        ["Evenement-Avond", 5.50, 4, "Speciale sessie"]
+      ];
+
+      const worksheet = XLSX.utils.aoa_to_sheet(rows);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Tickets");
+      XLSX.writeFile(workbook, "tickets-voorbeeld.xlsx");
+    }
+
+    function printTicket() {
+      if (state.importedTickets.length > 0) {
+        sessionStorage.setItem("printData", JSON.stringify({
+          mode: "batch",
+          source: "excel",
+          fileName: state.fileName,
+          sheetName: state.sheetName,
+          tickets: state.importedTickets
+        }));
+
+        window.open("print.html", "_blank");
+        return;
+      }
+
+      const code = searchInput.value.trim();
+      const prijs = Number(prijsInput.value);
+      const aantal = Number(aantalInput.value);
+
+      if (!code) {
+        alert("Geef eerst tekst of een artikelcode in.");
+        return;
+      }
+
+      if (isNaN(prijs) || prijs < 0) {
+        alert("Geef een geldige prijs in.");
+        return;
+      }
+
+      if (isNaN(aantal) || aantal < 1) {
+        alert("Geef een geldig aantal in.");
+        return;
+      }
+
+      sessionStorage.setItem("printData", JSON.stringify({
+        mode: "single",
+        source: "manual",
+        tickets: [
+          {
+            artikelcode: code,
+            prijs: prijs,
+            aantal: aantal,
+            qrText: code,
+            extras: []
+          }
+        ]
+      }));
+
+      window.open("print.html", "_blank");
+    }
+
+    function resetFields() {
+      state.importedTickets = [];
+      state.rawRows = [];
+      state.headers = [];
+      state.invalidRows = [];
+      state.fileName = "";
+      state.sheetName = "";
+      state.mapping = { code: "", price: "", quantity: "" };
+
+      searchInput.value = "";
+      prijsInput.value = "2.00";
+      aantalInput.value = "1";
+      excelFileInput.value = "";
+
+      mappingPanel.classList.add("hidden");
+      importTools.classList.add("hidden");
+      importPreviewCard.classList.add("hidden");
+      setStatus("Geen bestand geladen.", "neutral");
+      updatePreview();
+    }
+
+    searchInput.addEventListener("input", updatePreview);
+    prijsInput.addEventListener("input", updatePreview);
+    aantalInput.addEventListener("input", updatePreview);
+    excelFileInput.addEventListener("change", handleExcelUpload);
+    printButton.addEventListener("click", printTicket);
+    resetButton.addEventListener("click", resetFields);
+    rebuildImportButton.addEventListener("click", rebuildImportedTickets);
+    downloadTemplateButton.addEventListener("click", createTemplateFile);
+
+    mapCode.addEventListener("change", rebuildImportedTickets);
+    mapPrice.addEventListener("change", rebuildImportedTickets);
+    mapQty.addEventListener("change", rebuildImportedTickets);
+
+    setStatus("Geen bestand geladen.", "neutral");
+    updatePreview();
+  </script>
+</body>
+</html>
