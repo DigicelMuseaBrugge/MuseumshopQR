@@ -33,8 +33,9 @@
           <p class="eyebrow">Musea Brugge</p>
           <h1>Professioneel ticketsysteem voor labels en QR-codes</h1>
           <p class="subtitle">
-            Maak snel een ticket door zelf een tekst of artikelcode in te geven, een prijs te kiezen
-            en het aantal labels te bepalen. Alles wordt meteen voorbereid voor afdruk via je ticketprinter.
+            Maak snel tickets via manuele invoer of upload een Excel-bestand.
+            Het systeem probeert automatisch kolommen en layouts te herkennen
+            en laat je indien nodig handmatig bijsturen.
           </p>
 
           <div class="hero-actions">
@@ -46,7 +47,7 @@
         <div class="hero-side">
           <div class="logo-panel">
             <div class="logo-card">
-              <img src="Logo_CultuurCentrum_70x140mm_zw.webp" alt="Logo_CultuurCentrum_70x140mm_zw.webp">
+              <img src="Logo_CultuurCentrum_70x140mm_zw.webp" alt="Musea Brugge logo">
             </div>
             <div class="logo-card">
               <img src="downloaden123.png" alt="Musea Brugge logo 2">
@@ -56,7 +57,7 @@
           <div class="status-card">
             <span class="status-label">Systeemstatus</span>
             <strong>Klaar om tickets te genereren</strong>
-            <p>Gebruik vrije invoer of upload een Excel-bestand voor meerdere tickets.</p>
+            <p>Vrije invoer, automatische Excel-herkenning, batch-print en live controle voor afdruk.</p>
           </div>
         </div>
       </div>
@@ -67,12 +68,12 @@
         <div class="panel-head">
           <span class="section-tag">Invoer</span>
           <h2>Ticket invullen</h2>
-          <p>Vul hieronder de gegevens in voor het ticket dat je wilt afdrukken.</p>
+          <p>Vul handmatig één ticket in of upload een Excel-bestand voor meerdere labels tegelijk.</p>
         </div>
 
         <div class="field-group">
           <label for="search">Tekst / artikelcode</label>
-          <input id="search" type="text" placeholder="Bijv. SHOSTA-1141 of lalal" autocomplete="off">
+          <input id="search" type="text" placeholder="Bijv. SHOSTA-1141 of vrije tekst" autocomplete="off">
         </div>
 
         <div class="field-group">
@@ -87,7 +88,33 @@
 
         <div class="field-group upload-field">
           <label for="excelFile">Upload bestand</label>
-          <input id="excelFile" type="file" accept=".xlsx,.xls,.csv">
+          <input id="excelFile" type="file" accept=".xlsx,.xls,.csv,.ods">
+        </div>
+
+        <div class="import-card" id="importCard">
+          <div class="import-status" id="uploadStatus">Geen bestand geladen.</div>
+
+          <div class="mapping-grid hidden" id="mappingPanel">
+            <div class="field-group small-field">
+              <label for="mapCode">Kolom voor tekst / code</label>
+              <select id="mapCode"></select>
+            </div>
+
+            <div class="field-group small-field">
+              <label for="mapPrice">Kolom voor prijs</label>
+              <select id="mapPrice"></select>
+            </div>
+
+            <div class="field-group small-field">
+              <label for="mapQty">Kolom voor aantal</label>
+              <select id="mapQty"></select>
+            </div>
+          </div>
+
+          <div class="import-tools hidden" id="importTools">
+            <button class="ghost-btn compact-btn" id="rebuildImportButton" type="button">Import opnieuw opbouwen</button>
+            <button class="ghost-btn compact-btn" id="downloadTemplateButton" type="button">Excel voorbeeld downloaden</button>
+          </div>
         </div>
 
         <div class="button-group">
@@ -124,11 +151,15 @@
                 </tr>
                 <tr>
                   <td>Prijs</td>
-                  <td id="previewPrijs">€ 2.00</td>
+                  <td id="previewPrijs">€ 2,00</td>
                 </tr>
                 <tr>
                   <td>Aantal</td>
                   <td id="previewAantal">1</td>
+                </tr>
+                <tr>
+                  <td>Bron</td>
+                  <td id="previewSource">Manuele invoer</td>
                 </tr>
               </tbody>
             </table>
@@ -142,7 +173,7 @@
 
             <div class="mini-info-card">
               <span class="mini-title">Te printen prijs</span>
-              <strong id="miniPrijs">€ 2.00</strong>
+              <strong id="miniPrijs">€ 2,00</strong>
             </div>
 
             <div class="mini-info-card">
@@ -152,7 +183,33 @@
           </div>
 
           <div class="preview-note">
-            Het ticket wordt doorgestuurd naar de printpagina met exact deze waarden.
+            Bij Excel-import probeert het systeem automatisch kolommen te herkennen.
+            Indien nodig kan je de mapping hierboven manueel aanpassen.
+          </div>
+        </div>
+
+        <div class="import-preview-card hidden" id="importPreviewCard">
+          <div class="summary-top import-preview-head">
+            <div class="summary-chip">Excel controle</div>
+            <div class="summary-badge neutral-badge" id="importMetaBadge">0 rijen</div>
+          </div>
+
+          <div class="import-stats" id="importStats">
+            <div class="stat-pill"><span>Bestand</span><strong id="importFileName">—</strong></div>
+            <div class="stat-pill"><span>Blad</span><strong id="importSheetName">—</strong></div>
+            <div class="stat-pill"><span>Geldige tickets</span><strong id="importValidCount">0</strong></div>
+            <div class="stat-pill"><span>Ongeldige rijen</span><strong id="importInvalidCount">0</strong></div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="summary-table import-table">
+              <thead id="importPreviewHead"></thead>
+              <tbody id="importPreviewBody"></tbody>
+            </table>
+          </div>
+
+          <div class="preview-note" id="importErrorsNote">
+            Geen importfouten.
           </div>
         </div>
       </section>
@@ -163,10 +220,10 @@
         <span class="section-tag">Werkwijze</span>
         <h3>Hoe werkt het?</h3>
         <ul class="info-list">
-          <li>Typ een tekst of artikelcode in.</li>
-          <li>Kies zelf de prijs.</li>
-          <li>Bepaal hoeveel labels je wil afdrukken.</li>
-          <li>Of upload een Excel-bestand.</li>
+          <li>Typ een tekst of artikelcode in of upload een Excel-bestand.</li>
+          <li>Het systeem detecteert kolommen voor code, prijs en aantal.</li>
+          <li>Controleer de preview en pas de mapping aan indien nodig.</li>
+          <li>Druk af via dezelfde printknop.</li>
         </ul>
       </div>
 
@@ -176,8 +233,8 @@
         <ul class="info-list">
           <li>Gebruik het juiste etiketformaat.</li>
           <li>Zet schaal altijd op 100%.</li>
-          <li>Marges aan en Links 10ml.</li>
           <li>Schakel kop- en voetteksten uit.</li>
+          <li>Controleer lange codes vooraf in de preview.</li>
         </ul>
       </div>
 
@@ -185,10 +242,10 @@
         <span class="section-tag">Voordeel</span>
         <h3>Waarom deze opzet?</h3>
         <ul class="info-list">
-          <li>Snel werken op de vloer.</li>
-          <li>Vrije invoer voor elk type ticket.</li>
-          <li>Duidelijk overzicht vóór het printen.</li>
-          <li>Geschikt voor herhaald gebruik.</li>
+          <li>Werkt met uiteenlopende Excel-layouts.</li>
+          <li>Snelle batch-print zonder telkens code te wijzigen.</li>
+          <li>Duidelijke controle voor afdruk.</li>
+          <li>Geschikt voor online gebruik en herhaald gebruik.</li>
         </ul>
       </div>
     </section>
@@ -199,39 +256,446 @@
     const searchInput = document.getElementById("search");
     const prijsInput = document.getElementById("prijs");
     const aantalInput = document.getElementById("aantal");
+    const excelFileInput = document.getElementById("excelFile");
     const printButton = document.getElementById("printButton");
     const resetButton = document.getElementById("resetButton");
-    const excelFileInput = document.getElementById("excelFile");
+    const rebuildImportButton = document.getElementById("rebuildImportButton");
+    const downloadTemplateButton = document.getElementById("downloadTemplateButton");
 
     const previewCode = document.getElementById("previewCode");
     const previewPrijs = document.getElementById("previewPrijs");
     const previewAantal = document.getElementById("previewAantal");
+    const previewSource = document.getElementById("previewSource");
 
     const miniCode = document.getElementById("miniCode");
     const miniPrijs = document.getElementById("miniPrijs");
     const miniAantal = document.getElementById("miniAantal");
     const summaryBadge = document.getElementById("summaryBadge");
 
-    let importedTickets = [];
+    const uploadStatus = document.getElementById("uploadStatus");
+    const mappingPanel = document.getElementById("mappingPanel");
+    const importTools = document.getElementById("importTools");
+    const mapCode = document.getElementById("mapCode");
+    const mapPrice = document.getElementById("mapPrice");
+    const mapQty = document.getElementById("mapQty");
+
+    const importPreviewCard = document.getElementById("importPreviewCard");
+    const importMetaBadge = document.getElementById("importMetaBadge");
+    const importFileName = document.getElementById("importFileName");
+    const importSheetName = document.getElementById("importSheetName");
+    const importValidCount = document.getElementById("importValidCount");
+    const importInvalidCount = document.getElementById("importInvalidCount");
+    const importPreviewHead = document.getElementById("importPreviewHead");
+    const importPreviewBody = document.getElementById("importPreviewBody");
+    const importErrorsNote = document.getElementById("importErrorsNote");
+
+    const state = {
+      importedTickets: [],
+      rawRows: [],
+      headers: [],
+      fileName: "",
+      sheetName: "",
+      invalidRows: [],
+      mapping: {
+        code: "",
+        price: "",
+        quantity: ""
+      }
+    };
+
+    const aliases = {
+      code: [
+        "artikelcode", "artikel", "code", "ticket", "ticketcode", "item", "itemcode",
+        "naam", "titel", "beschrijving", "omschrijving", "product", "label", "reference",
+        "ref", "sku", "barcode", "omschrijving ticket"
+      ],
+      price: [
+        "prijs", "price", "bedrag", "amount", "tarief", "value", "euro", "kostprijs",
+        "salesprice", "ticketprijs", "prijs euro"
+      ],
+      quantity: [
+        "aantal", "qty", "quantity", "count", "labels", "stuks", "pieces", "copies",
+        "copie", "print", "prints", "number", "aantal labels"
+      ]
+    };
 
     function formatTicketText(aantal) {
       return aantal === 1 ? "1 ticket" : `${aantal} tickets`;
     }
 
+    function formatPrice(value) {
+      const amount = Number(value);
+      if (isNaN(amount)) return "€ 0,00";
+      return new Intl.NumberFormat("nl-BE", {
+        style: "currency",
+        currency: "EUR"
+      }).format(amount);
+    }
+
+    function setStatus(message, type = "neutral") {
+      uploadStatus.textContent = message;
+      uploadStatus.className = "import-status";
+      uploadStatus.classList.add(type);
+    }
+
+    function cleanCell(value) {
+      if (value === null || value === undefined) return "";
+      if (typeof value === "number") return String(value);
+      return String(value).trim();
+    }
+
+    function parseFlexibleNumber(value) {
+      if (typeof value === "number") return value;
+      if (value === null || value === undefined) return NaN;
+
+      let text = String(value).trim();
+      if (!text) return NaN;
+
+      text = text
+        .replace(/\s/g, "")
+        .replace(/€/g, "")
+        .replace(/[A-Za-z]/g, "");
+
+      const hasComma = text.includes(",");
+      const hasDot = text.includes(".");
+
+      if (hasComma && hasDot) {
+        if (text.lastIndexOf(",") > text.lastIndexOf(".")) {
+          text = text.replace(/\./g, "").replace(",", ".");
+        } else {
+          text = text.replace(/,/g, "");
+        }
+      } else if (hasComma) {
+        text = text.replace(",", ".");
+      }
+
+      const num = Number(text);
+      return Number.isFinite(num) ? num : NaN;
+    }
+
+    function isMostlyNumericColumn(columnName, rows) {
+      let numeric = 0;
+      let total = 0;
+
+      rows.slice(0, 25).forEach(row => {
+        const value = row[columnName];
+        if (value === "" || value === null || value === undefined) return;
+        total++;
+        if (!isNaN(parseFlexibleNumber(value))) numeric++;
+      });
+
+      return total > 0 && numeric / total >= 0.7;
+    }
+
+    function isMostlyIntegerSmallColumn(columnName, rows) {
+      let matches = 0;
+      let total = 0;
+
+      rows.slice(0, 25).forEach(row => {
+        const value = row[columnName];
+        if (value === "" || value === null || value === undefined) return;
+        const num = parseFlexibleNumber(value);
+        if (isNaN(num)) return;
+        total++;
+        if (Number.isInteger(num) && num >= 0 && num <= 10000) matches++;
+      });
+
+      return total > 0 && matches / total >= 0.75;
+    }
+
+    function normalizeHeaderName(name, index) {
+      const base = cleanCell(name) || `Kolom ${index + 1}`;
+      return base.replace(/\s+/g, " ").trim();
+    }
+
+    function uniquifyHeaders(headers) {
+      const seen = new Map();
+
+      return headers.map(header => {
+        const key = header.toLowerCase();
+        const count = seen.get(key) || 0;
+        seen.set(key, count + 1);
+        return count === 0 ? header : `${header} (${count + 1})`;
+      });
+    }
+
+    function rowKeywordScore(row) {
+      const values = row.map(cleanCell).filter(Boolean);
+      if (!values.length) return -100;
+
+      let score = 0;
+      values.forEach(cell => {
+        const lower = cell.toLowerCase();
+        Object.values(aliases).flat().forEach(alias => {
+          if (lower.includes(alias)) score += 3;
+        });
+        if (/[A-Za-z]/.test(cell)) score += 0.6;
+        if (!isNaN(parseFlexibleNumber(cell))) score -= 0.4;
+      });
+
+      if (values.length >= 2) score += 1;
+      return score;
+    }
+
+    function detectHeaderRow(aoa) {
+      const limit = Math.min(10, aoa.length);
+      let bestIndex = 0;
+      let bestScore = -Infinity;
+
+      for (let i = 0; i < limit; i++) {
+        const score = rowKeywordScore(aoa[i] || []);
+        if (score > bestScore) {
+          bestScore = score;
+          bestIndex = i;
+        }
+      }
+
+      return bestScore >= 2 ? bestIndex : 0;
+    }
+
+    function buildObjectsFromSheet(aoa) {
+      const nonEmptyRows = aoa
+        .map(row => Array.isArray(row) ? row : [])
+        .filter(row => row.some(cell => cleanCell(cell) !== ""));
+
+      if (!nonEmptyRows.length) {
+        return { headers: [], rows: [] };
+      }
+
+      const headerIndex = detectHeaderRow(nonEmptyRows);
+      const headerRow = nonEmptyRows[headerIndex] || [];
+      const headers = uniquifyHeaders(headerRow.map((cell, idx) => normalizeHeaderName(cell, idx)));
+
+      const rows = nonEmptyRows.slice(headerIndex + 1).map((row, index) => {
+        const obj = {};
+        headers.forEach((header, colIdx) => {
+          obj[header] = cleanCell(row[colIdx] ?? "");
+        });
+        obj.__rowNumber = headerIndex + 2 + index;
+        return obj;
+      });
+
+      return { headers, rows };
+    }
+
+    function detectColumns(headers, rows) {
+      const result = { code: "", price: "", quantity: "" };
+
+      function headerScore(header, target) {
+        const normalized = header.toLowerCase();
+        let score = 0;
+        aliases[target].forEach(alias => {
+          if (normalized === alias) score += 12;
+          else if (normalized.includes(alias)) score += 6;
+        });
+
+        if (target === "price" && isMostlyNumericColumn(header, rows)) score += 4;
+        if (target === "quantity" && isMostlyIntegerSmallColumn(header, rows)) score += 5;
+        if (target === "code" && !isMostlyNumericColumn(header, rows)) score += 2;
+
+        return score;
+      }
+
+      const available = [...headers];
+
+      ["code", "price", "quantity"].forEach(target => {
+        let bestHeader = "";
+        let bestScore = -Infinity;
+
+        available.forEach(header => {
+          const score = headerScore(header, target);
+          if (score > bestScore) {
+            bestHeader = header;
+            bestScore = score;
+          }
+        });
+
+        if (bestHeader && bestScore > 0) {
+          result[target] = bestHeader;
+          const index = available.indexOf(bestHeader);
+          if (index >= 0) available.splice(index, 1);
+        }
+      });
+
+      if (!result.code) {
+        result.code = headers.find(h => !isMostlyNumericColumn(h, rows)) || headers[0] || "";
+      }
+
+      if (!result.price) {
+        result.price = headers.find(h => h !== result.code && isMostlyNumericColumn(h, rows)) || "";
+      }
+
+      if (!result.quantity) {
+        result.quantity = headers.find(h => h !== result.code && h !== result.price && isMostlyIntegerSmallColumn(h, rows)) || "";
+      }
+
+      return result;
+    }
+
+    function firstUsefulText(row, excludedHeaders = []) {
+      const excluded = new Set(excludedHeaders.filter(Boolean));
+      for (const key of Object.keys(row)) {
+        if (key === "__rowNumber" || excluded.has(key)) continue;
+        const value = cleanCell(row[key]);
+        if (!value) continue;
+        if (isNaN(parseFlexibleNumber(value)) || /[A-Za-z]/.test(value)) return value;
+      }
+      return "";
+    }
+
+    function buildTicketsFromRows(rows, mapping) {
+      const tickets = [];
+      const invalidRows = [];
+
+      rows.forEach(row => {
+        const codeHeader = mapping.code;
+        const priceHeader = mapping.price;
+        const quantityHeader = mapping.quantity;
+
+        let artikelcode = cleanCell(row[codeHeader]);
+        const prijsValue = priceHeader ? parseFlexibleNumber(row[priceHeader]) : NaN;
+        const qtyValue = quantityHeader ? parseFlexibleNumber(row[quantityHeader]) : NaN;
+
+        if (!artikelcode) {
+          artikelcode = firstUsefulText(row, [priceHeader, quantityHeader]);
+        }
+
+        const prijs = !isNaN(prijsValue) && prijsValue >= 0 ? prijsValue : 0;
+        const aantal = !isNaN(qtyValue) && qtyValue >= 1 ? Math.floor(qtyValue) : 1;
+
+        const extras = Object.keys(row)
+          .filter(key => key !== "__rowNumber" && ![codeHeader, priceHeader, quantityHeader].includes(key))
+          .map(key => ({
+            label: key,
+            value: cleanCell(row[key])
+          }))
+          .filter(item => item.value !== "");
+
+        const isEmptyRow =
+          !artikelcode &&
+          extras.length === 0 &&
+          (isNaN(prijsValue) || prijsValue === 0) &&
+          (isNaN(qtyValue) || qtyValue === 0);
+
+        if (isEmptyRow) {
+          return;
+        }
+
+        if (!artikelcode) {
+          invalidRows.push({
+            rowNumber: row.__rowNumber || "?",
+            reason: "Geen bruikbare tekst of code gevonden."
+          });
+          return;
+        }
+
+        tickets.push({
+          artikelcode,
+          prijs,
+          aantal,
+          qrText: artikelcode,
+          extras,
+          rowNumber: row.__rowNumber || ""
+        });
+      });
+
+      return { tickets, invalidRows };
+    }
+
+    function fillMappingSelect(select, headers, selectedValue) {
+      select.innerHTML = "";
+
+      const emptyOption = document.createElement("option");
+      emptyOption.value = "";
+      emptyOption.textContent = "Niet gebruiken";
+      select.appendChild(emptyOption);
+
+      headers.forEach(header => {
+        const option = document.createElement("option");
+        option.value = header;
+        option.textContent = header;
+        if (header === selectedValue) option.selected = true;
+        select.appendChild(option);
+      });
+    }
+
+    function refreshMappingUI() {
+      if (!state.headers.length) {
+        mappingPanel.classList.add("hidden");
+        importTools.classList.add("hidden");
+        return;
+      }
+
+      fillMappingSelect(mapCode, state.headers, state.mapping.code);
+      fillMappingSelect(mapPrice, state.headers, state.mapping.price);
+      fillMappingSelect(mapQty, state.headers, state.mapping.quantity);
+
+      mappingPanel.classList.remove("hidden");
+      importTools.classList.remove("hidden");
+    }
+
+    function renderImportPreview() {
+      if (!state.headers.length || !state.rawRows.length) {
+        importPreviewCard.classList.add("hidden");
+        return;
+      }
+
+      importPreviewCard.classList.remove("hidden");
+      importMetaBadge.textContent = `${state.rawRows.length} rijen`;
+      importFileName.textContent = state.fileName || "—";
+      importSheetName.textContent = state.sheetName || "—";
+      importValidCount.textContent = String(state.importedTickets.length);
+      importInvalidCount.textContent = String(state.invalidRows.length);
+
+      importPreviewHead.innerHTML = "";
+      importPreviewBody.innerHTML = "";
+
+      const headRow = document.createElement("tr");
+      state.headers.slice(0, 6).forEach(header => {
+        const th = document.createElement("th");
+        th.textContent = header;
+        headRow.appendChild(th);
+      });
+      importPreviewHead.appendChild(headRow);
+
+      state.rawRows.slice(0, 8).forEach(row => {
+        const tr = document.createElement("tr");
+        state.headers.slice(0, 6).forEach(header => {
+          const td = document.createElement("td");
+          td.textContent = cleanCell(row[header]) || "—";
+          tr.appendChild(td);
+        });
+        importPreviewBody.appendChild(tr);
+      });
+
+      if (state.invalidRows.length) {
+        const messages = state.invalidRows.slice(0, 5).map(item => `Rij ${item.rowNumber}: ${item.reason}`);
+        importErrorsNote.textContent = `Opmerking: ${messages.join(" | ")}`;
+      } else {
+        importErrorsNote.textContent = "Geen importfouten.";
+      }
+    }
+
     function updatePreview() {
-      if (importedTickets.length > 0) {
-        const totaal = importedTickets.reduce((sum, item) => sum + item.aantal, 0);
-        const eerste = importedTickets[0];
+      if (state.importedTickets.length > 0) {
+        const totaalLabels = state.importedTickets.reduce((sum, item) => sum + item.aantal, 0);
+        const eerste = state.importedTickets[0];
+        const uniekePrijzen = [...new Set(state.importedTickets.map(item => Number(item.prijs).toFixed(2)))];
 
-        previewCode.textContent = `${eerste.artikelcode}${importedTickets.length > 1 ? " +" : ""}`;
-        previewPrijs.textContent = importedTickets.length > 1 ? "Meerdere prijzen" : "€ " + Number(eerste.prijs).toFixed(2);
-        previewAantal.textContent = totaal;
+        previewCode.textContent = state.importedTickets.length === 1
+          ? eerste.artikelcode
+          : `${eerste.artikelcode} + ${state.importedTickets.length - 1} andere`;
+        previewPrijs.textContent = uniekePrijzen.length === 1
+          ? formatPrice(uniekePrijzen[0])
+          : "Meerdere prijzen";
+        previewAantal.textContent = String(totaalLabels);
+        previewSource.textContent = `Excel import (${state.fileName || "bestand"})`;
 
-        miniCode.textContent = `${importedTickets.length} rij(en) geladen`;
-        miniPrijs.textContent = "Excel import";
-        miniAantal.textContent = totaal;
+        miniCode.textContent = `${state.importedTickets.length} ticketrij(en)`;
+        miniPrijs.textContent = uniekePrijzen.length === 1 ? formatPrice(uniekePrijzen[0]) : "Variabel";
+        miniAantal.textContent = String(totaalLabels);
 
-        summaryBadge.textContent = formatTicketText(totaal);
+        summaryBadge.textContent = formatTicketText(totaalLabels);
         return;
       }
 
@@ -240,55 +704,56 @@
       const aantal = Number(aantalInput.value || 1);
 
       previewCode.textContent = code;
-      previewPrijs.textContent = "€ " + prijs.toFixed(2);
-      previewAantal.textContent = aantal;
+      previewPrijs.textContent = formatPrice(prijs);
+      previewAantal.textContent = String(aantal);
+      previewSource.textContent = "Manuele invoer";
 
       miniCode.textContent = code;
-      miniPrijs.textContent = "€ " + prijs.toFixed(2);
-      miniAantal.textContent = aantal;
+      miniPrijs.textContent = formatPrice(prijs);
+      miniAantal.textContent = String(aantal);
 
       summaryBadge.textContent = formatTicketText(aantal);
     }
 
-    function normalizeRow(row) {
-      const artikelcode = String(
-        row.artikelcode ??
-        row.Artikelcode ??
-        row.code ??
-        row.Code ??
-        row.tekst ??
-        row.Tekst ??
-        ""
-      ).trim();
+    function rebuildImportedTickets() {
+      if (!state.rawRows.length) return;
 
-      const prijs = Number(
-        row.prijs ??
-        row.Prijs ??
-        0
-      );
-
-      const aantal = Number(
-        row.aantal ??
-        row.Aantal ??
-        1
-      );
-
-      if (!artikelcode) return null;
-      if (isNaN(prijs) || prijs < 0) return null;
-      if (isNaN(aantal) || aantal < 1) return null;
-
-      return {
-        artikelcode,
-        prijs,
-        aantal: Math.floor(aantal)
+      state.mapping = {
+        code: mapCode.value,
+        price: mapPrice.value,
+        quantity: mapQty.value
       };
+
+      const result = buildTicketsFromRows(state.rawRows, state.mapping);
+      state.importedTickets = result.tickets;
+      state.invalidRows = result.invalidRows;
+
+      if (state.importedTickets.length > 0) {
+        const totalLabels = state.importedTickets.reduce((sum, item) => sum + item.aantal, 0);
+        const invalidText = state.invalidRows.length ? ` ${state.invalidRows.length} rij(en) overgeslagen.` : "";
+        setStatus(`${state.fileName} geladen: ${state.importedTickets.length} geldige ticketrij(en), ${totalLabels} label(s).${invalidText}`, "success");
+      } else {
+        setStatus("Geen geldige ticketrijen gevonden in dit bestand.", "error");
+      }
+
+      renderImportPreview();
+      updatePreview();
     }
 
     function handleExcelUpload(event) {
       const file = event.target.files[0];
 
       if (!file) {
-        importedTickets = [];
+        state.importedTickets = [];
+        state.rawRows = [];
+        state.headers = [];
+        state.invalidRows = [];
+        state.fileName = "";
+        state.sheetName = "";
+        mappingPanel.classList.add("hidden");
+        importTools.classList.add("hidden");
+        importPreviewCard.classList.add("hidden");
+        setStatus("Geen bestand geladen.", "neutral");
         updatePreview();
         return;
       }
@@ -301,22 +766,38 @@
           const workbook = XLSX.read(data, { type: "array" });
           const firstSheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[firstSheetName];
-          const rows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
 
-          const parsedTickets = rows.map(normalizeRow).filter(Boolean);
+          const aoa = XLSX.utils.sheet_to_json(worksheet, {
+            header: 1,
+            raw: false,
+            defval: ""
+          });
 
-          if (parsedTickets.length === 0) {
-            importedTickets = [];
-            alert("Geen geldige rijen gevonden in het bestand. Gebruik kolommen: artikelcode, prijs, aantal.");
-            updatePreview();
-            return;
+          const { headers, rows } = buildObjectsFromSheet(aoa);
+
+          if (!headers.length || !rows.length) {
+            throw new Error("Leeg of onbruikbaar bestand.");
           }
 
-          importedTickets = parsedTickets;
-          updatePreview();
+          state.fileName = file.name;
+          state.sheetName = firstSheetName;
+          state.headers = headers;
+          state.rawRows = rows;
+          state.mapping = detectColumns(headers, rows);
+
+          refreshMappingUI();
+          rebuildImportedTickets();
         } catch (error) {
-          importedTickets = [];
-          alert("Kon het Excel-bestand niet verwerken.");
+          state.importedTickets = [];
+          state.rawRows = [];
+          state.headers = [];
+          state.invalidRows = [];
+          state.fileName = file.name;
+          state.sheetName = "";
+          mappingPanel.classList.add("hidden");
+          importTools.classList.add("hidden");
+          importPreviewCard.classList.add("hidden");
+          setStatus("Kon het bestand niet verwerken. Controleer het formaat of probeer een ander werkblad.", "error");
           updatePreview();
         }
       };
@@ -324,11 +805,28 @@
       reader.readAsArrayBuffer(file);
     }
 
+    function createTemplateFile() {
+      const rows = [
+        ["artikelcode", "prijs", "aantal", "opmerking"],
+        ["SHOSTA-1141", 2.00, 3, "Standaard ticket"],
+        ["Museumpas", 0.00, 2, "Gratis toegang"],
+        ["Evenement-Avond", 5.50, 4, "Speciale sessie"]
+      ];
+
+      const worksheet = XLSX.utils.aoa_to_sheet(rows);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Tickets");
+      XLSX.writeFile(workbook, "tickets-voorbeeld.xlsx");
+    }
+
     function printTicket() {
-      if (importedTickets.length > 0) {
+      if (state.importedTickets.length > 0) {
         sessionStorage.setItem("printData", JSON.stringify({
           mode: "batch",
-          tickets: importedTickets
+          source: "excel",
+          fileName: state.fileName,
+          sheetName: state.sheetName,
+          tickets: state.importedTickets
         }));
 
         window.open("print.html", "_blank");
@@ -356,11 +854,14 @@
 
       sessionStorage.setItem("printData", JSON.stringify({
         mode: "single",
+        source: "manual",
         tickets: [
           {
             artikelcode: code,
             prijs: prijs,
-            aantal: aantal
+            aantal: aantal,
+            qrText: code,
+            extras: []
           }
         ]
       }));
@@ -369,11 +870,23 @@
     }
 
     function resetFields() {
-      importedTickets = [];
+      state.importedTickets = [];
+      state.rawRows = [];
+      state.headers = [];
+      state.invalidRows = [];
+      state.fileName = "";
+      state.sheetName = "";
+      state.mapping = { code: "", price: "", quantity: "" };
+
       searchInput.value = "";
       prijsInput.value = "2.00";
       aantalInput.value = "1";
       excelFileInput.value = "";
+
+      mappingPanel.classList.add("hidden");
+      importTools.classList.add("hidden");
+      importPreviewCard.classList.add("hidden");
+      setStatus("Geen bestand geladen.", "neutral");
       updatePreview();
     }
 
@@ -383,7 +896,14 @@
     excelFileInput.addEventListener("change", handleExcelUpload);
     printButton.addEventListener("click", printTicket);
     resetButton.addEventListener("click", resetFields);
+    rebuildImportButton.addEventListener("click", rebuildImportedTickets);
+    downloadTemplateButton.addEventListener("click", createTemplateFile);
 
+    mapCode.addEventListener("change", rebuildImportedTickets);
+    mapPrice.addEventListener("change", rebuildImportedTickets);
+    mapQty.addEventListener("change", rebuildImportedTickets);
+
+    setStatus("Geen bestand geladen.", "neutral");
     updatePreview();
   </script>
 </body>
