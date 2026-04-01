@@ -9,403 +9,104 @@
 </head>
 <body>
 
-  <div class="page-shell">
+<div class="page-shell">
 
-    <nav class="navbar">
-      <div class="nav-left">
-        <div class="brand-mark">MB</div>
-        <div class="brand-text">
-          <span class="brand-top">Musea Brugge</span>
-          <span class="brand-bottom">QR Ticket Generator</span>
-        </div>
-      </div>
+<nav class="navbar">
+  <div class="nav-left">
+    <div class="brand-mark">MB</div>
+    <div class="brand-text">
+      <span class="brand-top">Musea Brugge</span>
+      <span class="brand-bottom">QR Ticket Generator</span>
+    </div>
+  </div>
+</nav>
 
-      <div class="nav-right">
-        <a href="#ticket-invoer">Ticket invoer</a>
-        <a href="#overzicht">Overzicht</a>
-        <a href="#uitleg">Uitleg</a>
-      </div>
-    </nav>
+<main class="main-grid">
 
-    <header class="hero">
-      <div class="hero-grid">
-        <div class="hero-content">
-          <p class="eyebrow">Musea Brugge</p>
-          <h1>Professioneel ticketsysteem voor labels en QR-codes</h1>
-          <p class="subtitle">
-            Maak snel een ticket door zelf een tekst of artikelcode in te geven, een prijs te kiezen
-            en het aantal labels te bepalen. Alles wordt meteen voorbereid voor afdruk via je ticketprinter.
-          </p>
+<section class="panel input-panel">
 
-          <div class="hero-actions">
-            <a href="#ticket-invoer" class="hero-btn primary-btn">Start ticket maken</a>
-            <a href="#overzicht" class="hero-btn secondary-btn">Bekijk overzicht</a>
-          </div>
-        </div>
-
-        <div class="hero-side">
-          <div class="logo-panel">
-            <div class="logo-card">
-              <img src="Logo_CultuurCentrum_70x140mm_zw.webp" alt="Logo_CultuurCentrum_70x140mm_zw.webp">
-            </div>
-            <div class="logo-card">
-              <img src="downloaden123.png" alt="Musea Brugge logo 2">
-            </div>
-          </div>
-
-          <div class="status-card">
-            <span class="status-label">Systeemstatus</span>
-            <strong>Klaar om tickets te genereren</strong>
-            <p>Gebruik vrije invoer of upload een Excel-bestand voor meerdere tickets.</p>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <main class="main-grid">
-      <section class="panel input-panel" id="ticket-invoer">
-        <div class="panel-head">
-          <span class="section-tag">Invoer</span>
-          <h2>Ticket invullen</h2>
-          <p>Vul hieronder de gegevens in voor het ticket dat je wilt afdrukken.</p>
-        </div>
-
-        <div class="field-group">
-          <label for="search">Tekst / artikelcode</label>
-          <input id="search" type="text" placeholder="Bijv. SHOSTA-1141 of lalal" autocomplete="off">
-        </div>
-
-        <div class="field-group">
-          <label for="prijs">Prijs</label>
-          <input id="prijs" type="number" placeholder="Bijv. 2.00" step="0.01" min="0" value="2.00">
-        </div>
-
-        <div class="field-group">
-          <label for="aantal">Aantal tickets</label>
-          <input id="aantal" type="number" value="1" min="1">
-        </div>
-
-        <div class="button-group">
-          <button class="print-btn" id="printButton">Tickets afdrukken</button>
-          <button class="ghost-btn" id="resetButton" type="button">Velden leegmaken</button>
-        </div>
-
-       
-
-          <div class="field-group upload-field">
-            <label for="excelFile">Excel-bestand kiezen</label>
-            <input id="excelFile" type="file" accept=".xlsx,.xls,.csv">
-          </div>
-
-          <div class="upload-status" id="uploadStatus">
-            Geen bestand geladen. Je kan ook nog altijd manueel één ticket invullen.
-          </div>
-        </div>
-      </section>
-
-      <section class="panel preview-panel" id="overzicht">
-        <div class="panel-head">
-          <span class="section-tag">Overzicht</span>
-          <h2>Ingevoerde gegevens</h2>
-          <p>Controleer hieronder alle waarden voor je afdrukt.</p>
-        </div>
-
-        <div class="summary-card">
-          <div class="summary-top">
-            <div class="summary-chip">Live overzicht</div>
-            <div class="summary-badge" id="summaryBadge">1 ticket</div>
-          </div>
-
-          <div class="table-wrap">
-            <table class="summary-table">
-              <thead>
-                <tr>
-                  <th>Veld</th>
-                  <th>Waarde</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Tekst / artikelcode</td>
-                  <td id="previewCode">lalal</td>
-                </tr>
-                <tr>
-                  <td>Prijs</td>
-                  <td id="previewPrijs">€ 2.00</td>
-                </tr>
-                <tr>
-                  <td>Aantal</td>
-                  <td id="previewAantal">1</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="preview-cards">
-            <div class="mini-info-card">
-              <span class="mini-title">QR-bron</span>
-              <strong id="miniCode">lalal</strong>
-            </div>
-
-            <div class="mini-info-card">
-              <span class="mini-title">Te printen prijs</span>
-              <strong id="miniPrijs">€ 2.00</strong>
-            </div>
-
-            <div class="mini-info-card">
-              <span class="mini-title">Aantal labels</span>
-              <strong id="miniAantal">1</strong>
-            </div>
-          </div>
-
-          <div class="preview-note">
-            Het ticket wordt doorgestuurd naar de printpagina met exact deze waarden.
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <section class="info-grid" id="uitleg">
-      <div class="info-panel">
-        <span class="section-tag">Werkwijze</span>
-        <h3>Hoe werkt het?</h3>
-        <ul class="info-list">
-          <li>Typ een tekst of artikelcode in.</li>
-          <li>Kies zelf de prijs.</li>
-          <li>Bepaal hoeveel labels je wil afdrukken of upload een Excel.</li>
-          <li>Druk op de knop om het ticket te genereren.</li>
-        </ul>
-      </div>
-
-      <div class="info-panel">
-        <span class="section-tag">Print</span>
-        <h3>Voor Zebra labelprinter</h3>
-        <ul class="info-list">
-          <li>Gebruik het juiste etiketformaat.</li>
-          <li>Zet schaal altijd op 100%.</li>
-          <li>Marges aan en Links 10ml.</li>
-          <li>Schakel kop- en voetteksten uit.</li>
-        </ul>
-      </div>
-
-      <div class="info-panel">
-        <span class="section-tag">Voordeel</span>
-        <h3>Waarom deze opzet?</h3>
-        <ul class="info-list">
-          <li>Snel werken op de vloer.</li>
-          <li>Vrije invoer of Excel import voor elk type ticket.</li>
-          <li>Duidelijk overzicht vóór het printen.</li>
-          <li>Geschikt voor herhaald gebruik.</li>
-        </ul>
-      </div>
-    </section>
-
+  <div class="field-group">
+    <label>Tekst / artikelcode</label>
+    <input id="search" type="text">
   </div>
 
-  <script>
-    const searchInput = document.getElementById("search");
-    const prijsInput = document.getElementById("prijs");
-    const aantalInput = document.getElementById("aantal");
-    const printButton = document.getElementById("printButton");
-    const resetButton = document.getElementById("resetButton");
-    const excelFileInput = document.getElementById("excelFile");
-    const uploadStatus = document.getElementById("uploadStatus");
+  <div class="field-group">
+    <label>Prijs</label>
+    <input id="prijs" type="number" value="2.00">
+  </div>
 
-    const previewCode = document.getElementById("previewCode");
-    const previewPrijs = document.getElementById("previewPrijs");
-    const previewAantal = document.getElementById("previewAantal");
+  <div class="field-group">
+    <label>Aantal</label>
+    <input id="aantal" type="number" value="1">
+  </div>
 
-    const miniCode = document.getElementById("miniCode");
-    const miniPrijs = document.getElementById("miniPrijs");
-    const miniAantal = document.getElementById("miniAantal");
-    const summaryBadge = document.getElementById("summaryBadge");
+  <div class="button-group">
+    <button id="printButton" class="print-btn">Afdrukken</button>
+  </div>
 
-    let importedTickets = [];
+  <!-- Excel upload (simpel zoals screenshot) -->
+  <div class="help-box">
+    <strong>Excel upload</strong>
 
-    function formatTicketText(aantal) {
-      return aantal === 1 ? "1 ticket" : `${aantal} tickets`;
-    }
+    <input id="excelFile" type="file" accept=".xlsx,.xls,.csv">
 
-    function updatePreview() {
-      if (importedTickets.length > 0) {
-        const totaal = importedTickets.reduce((sum, item) => sum + item.aantal, 0);
-        const eerste = importedTickets[0];
+    <div id="uploadStatus" class="upload-status">
+      Geen bestand geladen. Je kan ook nog altijd manueel één ticket invullen.
+    </div>
+  </div>
 
-        previewCode.textContent = `${eerste.artikelcode}${importedTickets.length > 1 ? " +" : ""}`;
-        previewPrijs.textContent = importedTickets.length > 1 ? "Meerdere prijzen" : "€ " + Number(eerste.prijs).toFixed(2);
-        previewAantal.textContent = totaal;
+</section>
 
-        miniCode.textContent = `${importedTickets.length} rij(en) geladen`;
-        miniPrijs.textContent = "Excel import";
-        miniAantal.textContent = totaal;
+</main>
 
-        summaryBadge.textContent = formatTicketText(totaal);
-        return;
-      }
+</div>
 
-      const code = searchInput.value.trim() || "lalal";
-      const prijs = Number(prijsInput.value || 0);
-      const aantal = Number(aantalInput.value || 1);
+<script>
 
-      previewCode.textContent = code;
-      previewPrijs.textContent = "€ " + prijs.toFixed(2);
-      previewAantal.textContent = aantal;
+const excelFile = document.getElementById("excelFile");
+let importedTickets = [];
 
-      miniCode.textContent = code;
-      miniPrijs.textContent = "€ " + prijs.toFixed(2);
-      miniAantal.textContent = aantal;
+/* Excel upload */
+excelFile.addEventListener("change", function(e){
 
-      summaryBadge.textContent = formatTicketText(aantal);
-    }
+  const file = e.target.files[0];
+  if(!file) return;
 
-    function setUploadStatus(message, type = "") {
-      uploadStatus.textContent = message;
-      uploadStatus.className = "upload-status";
-      if (type) {
-        uploadStatus.classList.add(type);
-      }
-    }
+  const reader = new FileReader();
 
-    function normalizeRow(row) {
-      const artikelcode = String(
-        row.artikelcode ??
-        row.Artikelcode ??
-        row.code ??
-        row.Code ??
-        row.tekst ??
-        row.Tekst ??
-        ""
-      ).trim();
+  reader.onload = function(evt){
 
-      const prijs = Number(
-        row.prijs ??
-        row.Prijs ??
-        0
-      );
+    const data = new Uint8Array(evt.target.result);
+    const workbook = XLSX.read(data, {type:'array'});
 
-      const aantal = Number(
-        row.aantal ??
-        row.Aantal ??
-        1
-      );
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(sheet);
 
-      if (!artikelcode) return null;
-      if (isNaN(prijs) || prijs < 0) return null;
-      if (isNaN(aantal) || aantal < 1) return null;
+    importedTickets = rows.map(r => ({
+      artikelcode: r.artikelcode || r.Artikelcode,
+      prijs: Number(r.prijs || r.Prijs),
+      aantal: Number(r.aantal || r.Aantal || 1)
+    })).filter(r => r.artikelcode);
 
-      return {
-        artikelcode,
-        prijs,
-        aantal: Math.floor(aantal)
-      };
-    }
+    document.getElementById("uploadStatus").textContent =
+      importedTickets.length + " rijen geladen";
 
-    function handleExcelUpload(event) {
-      const file = event.target.files[0];
+  };
 
-      if (!file) {
-        importedTickets = [];
-        setUploadStatus("Geen bestand geladen. Je kan ook nog altijd manueel één ticket invullen.");
-        updatePreview();
-        return;
-      }
+  reader.readAsArrayBuffer(file);
+});
 
-      const reader = new FileReader();
+/* print */
+document.getElementById("printButton").onclick = function(){
 
-      reader.onload = function(e) {
-        try {
-          const data = new Uint8Array(e.target.result);
-          const workbook = XLSX.read(data, { type: "array" });
-          const firstSheetName = workbook.SheetNames[0];
-          const worksheet = workbook.Sheets[firstSheetName];
-          const rows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+  if(importedTickets.length > 0){
+    sessionStorage.setItem("printData", JSON.stringify(importedTickets));
+  }
 
-          const parsedTickets = rows.map(normalizeRow).filter(Boolean);
+  window.open("print.html", "_blank");
+};
 
-          if (parsedTickets.length === 0) {
-            importedTickets = [];
-            setUploadStatus("Bestand gelezen, maar geen geldige rijen gevonden. Gebruik kolommen: artikelcode, prijs, aantal.", "error");
-            updatePreview();
-            return;
-          }
+</script>
 
-          importedTickets = parsedTickets;
-          const totaal = importedTickets.reduce((sum, item) => sum + item.aantal, 0);
-
-          setUploadStatus(`${file.name} geladen: ${importedTickets.length} rij(en), ${totaal} ticket(s) klaar voor afdruk.`, "success");
-          updatePreview();
-        } catch (error) {
-          importedTickets = [];
-          setUploadStatus("Kon het Excel-bestand niet verwerken. Controleer het formaat en de kolomnamen.", "error");
-          updatePreview();
-        }
-      };
-
-      reader.readAsArrayBuffer(file);
-    }
-
-    function printTicket() {
-      if (importedTickets.length > 0) {
-        sessionStorage.setItem("printData", JSON.stringify({
-          mode: "batch",
-          tickets: importedTickets
-        }));
-
-        window.open("print.html", "_blank");
-        return;
-      }
-
-      const code = searchInput.value.trim();
-      const prijs = Number(prijsInput.value);
-      const aantal = Number(aantalInput.value);
-
-      if (!code) {
-        alert("Geef eerst tekst of een artikelcode in.");
-        return;
-      }
-
-      if (isNaN(prijs) || prijs < 0) {
-        alert("Geef een geldige prijs in.");
-        return;
-      }
-
-      if (isNaN(aantal) || aantal < 1) {
-        alert("Geef een geldig aantal in.");
-        return;
-      }
-
-      sessionStorage.setItem("printData", JSON.stringify({
-        mode: "single",
-        tickets: [
-          {
-            artikelcode: code,
-            prijs: prijs,
-            aantal: aantal
-          }
-        ]
-      }));
-
-      window.open("print.html", "_blank");
-    }
-
-    function resetFields() {
-      importedTickets = [];
-      searchInput.value = "";
-      prijsInput.value = "2.00";
-      aantalInput.value = "1";
-      excelFileInput.value = "";
-      setUploadStatus("Geen bestand geladen. Je kan ook nog altijd manueel één ticket invullen.");
-      updatePreview();
-    }
-
-    searchInput.addEventListener("input", updatePreview);
-    prijsInput.addEventListener("input", updatePreview);
-    aantalInput.addEventListener("input", updatePreview);
-    excelFileInput.addEventListener("change", handleExcelUpload);
-    printButton.addEventListener("click", printTicket);
-    resetButton.addEventListener("click", resetFields);
-
-    updatePreview();
-  </script>
 </body>
 </html>
