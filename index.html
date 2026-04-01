@@ -579,6 +579,10 @@ function firstUsefulText(row, excludedHeaders = []) {
         const quantityHeader = mapping.quantity;
 
         let artikelcode = cleanCell(row[codeHeader]);
+
+if (artikelcode && !looksLikeCode(artikelcode) && artikelcode.length > 20) {
+  artikelcode = "";
+}
         const prijsValue = priceHeader ? parseFlexibleNumber(row[priceHeader]) : NaN;
         const qtyValue = quantityHeader ? parseFlexibleNumber(row[quantityHeader]) : NaN;
 
