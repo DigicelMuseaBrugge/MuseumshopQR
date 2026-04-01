@@ -33,8 +33,8 @@
           <p class="eyebrow">Musea Brugge</p>
           <h1>Professioneel ticketsysteem voor labels en QR-codes</h1>
           <p class="subtitle">
-            Maak snel een ticket door zelf een tekst of artikelcode in te geven,
-            een prijs te kiezen en het aantal labels te bepalen, of upload een Excel-bestand.
+            Maak snel een ticket door zelf een tekst of artikelcode in te geven, een prijs te kiezen
+            en het aantal labels te bepalen. Je kan ook een Excel-bestand uploaden.
           </p>
 
           <div class="hero-actions">
@@ -56,7 +56,7 @@
           <div class="status-card">
             <span class="status-label">Systeemstatus</span>
             <strong>Klaar om tickets te genereren</strong>
-            <p>Vrije invoer en Excel-import worden ondersteund.</p>
+            <p>Manuele invoer en Excel-import worden ondersteund.</p>
           </div>
         </div>
       </div>
@@ -95,7 +95,7 @@
 
           <div class="mapping-grid hidden" id="mappingPanel">
             <div class="field-group small-field">
-              <label for="mapCode">Kolom voor tekst / code</label>
+              <label for="mapCode">Kolom voor artikelcode</label>
               <select id="mapCode"></select>
             </div>
 
@@ -107,6 +107,11 @@
             <div class="field-group small-field">
               <label for="mapQty">Kolom voor aantal</label>
               <select id="mapQty"></select>
+            </div>
+
+            <div class="field-group small-field">
+              <label for="mapDescription">Kolom voor omschrijving</label>
+              <select id="mapDescription"></select>
             </div>
           </div>
 
@@ -219,9 +224,9 @@
         <h3>Hoe werkt het?</h3>
         <ul class="info-list">
           <li>Typ een tekst of artikelcode in of upload een Excel-bestand.</li>
-          <li>Het systeem probeert kolommen voor code, prijs en aantal te herkennen.</li>
+          <li>Het systeem probeert artikelcode, prijs en aantal automatisch te herkennen.</li>
           <li>Controleer het overzicht.</li>
-          <li>Druk op de knop om tickets te genereren.</li>
+          <li>Druk op de knop om het ticket te genereren.</li>
         </ul>
       </div>
 
@@ -232,7 +237,7 @@
           <li>Gebruik het juiste etiketformaat.</li>
           <li>Zet schaal altijd op 100%.</li>
           <li>Schakel kop- en voetteksten uit.</li>
-          <li>Controleer lange codes vooraf.</li>
+          <li>Controleer het overzicht vóór afdrukken.</li>
         </ul>
       </div>
 
@@ -241,7 +246,7 @@
         <h3>Waarom deze opzet?</h3>
         <ul class="info-list">
           <li>Snel werken op de vloer.</li>
-          <li>Vrije invoer of Excel import.</li>
+          <li>Vrije invoer en Excel import.</li>
           <li>Duidelijk overzicht vóór het printen.</li>
           <li>Geschikt voor herhaald gebruik.</li>
         </ul>
@@ -276,6 +281,7 @@
     const mapCode = document.getElementById("mapCode");
     const mapPrice = document.getElementById("mapPrice");
     const mapQty = document.getElementById("mapQty");
+    const mapDescription = document.getElementById("mapDescription");
 
     const importPreviewCard = document.getElementById("importPreviewCard");
     const importMetaBadge = document.getElementById("importMetaBadge");
@@ -297,26 +303,25 @@
       mapping: {
         code: "",
         price: "",
-        quantity: ""
+        quantity: "",
+        description: ""
       }
     };
 
     const aliases = {
       code: [
-        "artikelcode", "artikel code", "artikel", "code", "ticket", "ticketcode",
-        "item", "itemcode", "naam", "titel", "beschrijving", "omschrijving",
-        "product", "productcode", "label", "reference", "ref", "sku", "barcode",
-        "omschrijving ticket", "soort product", "product soort", "type", "ticket type"
+        "artikelcode", "artikel code", "code", "productcode", "sku", "barcode",
+        "artikelnummer", "itemcode", "ref"
       ],
       price: [
-        "prijs", "price", "bedrag", "amount", "tarief", "value", "euro", "kostprijs",
-        "salesprice", "ticketprijs", "prijs euro", "kost", "verkoopprijs", "prijs incl",
-        "prijs ex", "eenheidsprijs", "unit price"
+        "prijs", "price", "bedrag", "verkoopprijs", "eenheidsprijs", "unit price"
       ],
       quantity: [
-        "aantal", "qty", "quantity", "count", "labels", "stuks", "pieces", "copies",
-        "copie", "print", "prints", "number", "aantal labels", "aantal tickets",
-        "tickets", "hoeveelheid"
+        "hoeveelheid labels", "hoeveelheid", "aantal labels", "aantal", "qty",
+        "quantity", "labels", "stuks", "count"
+      ],
+      description: [
+        "omschrijving", "beschrijving", "titel", "naam", "product"
       ]
     };
 
@@ -347,16 +352,26 @@
     }
 
     function parseFlexibleNumber(value) {
-      if (typeof value === "number") return value;
-      if (value === null || value === undefined) return NaN;
+      if (typeof value === "number") {
+        return Number.isFinite(value) ? value : NaN;
+      }
+
+      if (value === null || value === undefined) {
+        return NaN;
+      }
 
       let text = String(value).trim();
-      if (!text) return NaN;
+      if (!text) {
+        return NaN;
+      }
+
+      if (/[A-Za-z]/.test(text)) {
+        return NaN;
+      }
 
       text = text
         .replace(/\s/g, "")
-        .replace(/€/g, "")
-        .replace(/[A-Za-z]/g, "");
+        .replace(/€/g, "");
 
       const hasComma = text.includes(",");
       const hasDot = text.includes(".");
@@ -537,16 +552,19 @@
       const result = {
         code: "",
         price: "",
-        quantity: ""
+        quantity: "",
+        description: ""
       };
 
       const codeMatches = findMatchingHeaders(headers, aliases.code);
       const priceMatches = findMatchingHeaders(headers, aliases.price);
       const qtyMatches = findMatchingHeaders(headers, aliases.quantity);
+      const descriptionMatches = findMatchingHeaders(headers, aliases.description);
 
       result.code = codeMatches[0] || "";
       result.price = priceMatches[0] || "";
       result.quantity = qtyMatches[0] || "";
+      result.description = descriptionMatches[0] || "";
 
       if (!result.price) {
         result.price = headers.find(h => isMostlyNumericColumn(h, rows)) || "";
@@ -560,11 +578,14 @@
       }
 
       if (!result.code) {
-        result.code = headers.find(h =>
-          h !== result.price &&
-          h !== result.quantity &&
-          !isMostlyNumericColumn(h, rows)
-        ) || headers[0] || "";
+        result.code =
+          headers.find(h => normalizeCompareText(h) === "artikelcode") ||
+          headers.find(h =>
+            h !== result.price &&
+            h !== result.quantity &&
+            !isMostlyNumericColumn(h, rows)
+          ) ||
+          "";
       }
 
       return result;
@@ -604,17 +625,19 @@
         const codeHeader = mapping.code;
         const priceHeader = mapping.price;
         const quantityHeader = mapping.quantity;
+        const descriptionHeader = mapping.description;
 
         let artikelcode = codeHeader ? cleanCell(row[codeHeader]) : "";
+        let omschrijving = descriptionHeader ? cleanCell(row[descriptionHeader]) : "";
         let prijs = priceHeader ? parseFlexibleNumber(row[priceHeader]) : NaN;
         let aantal = quantityHeader ? parseFlexibleNumber(row[quantityHeader]) : NaN;
 
-        if (artikelcode && !looksLikeCode(artikelcode) && artikelcode.length > 24) {
-          artikelcode = "";
+        if (!artikelcode && omschrijving && looksLikeCode(omschrijving)) {
+          artikelcode = omschrijving;
         }
 
         if (!artikelcode) {
-          artikelcode = firstUsefulText(row, [priceHeader, quantityHeader]);
+          artikelcode = firstUsefulText(row, [priceHeader, quantityHeader, descriptionHeader]);
         }
 
         if (isNaN(prijs) || prijs < 0) {
@@ -635,26 +658,17 @@
           }))
           .filter(item => item.value !== "");
 
-        const isEmptyRow =
-          !artikelcode &&
-          extras.length === 0 &&
-          (prijs === 0 || isNaN(prijs)) &&
-          (aantal === 0 || isNaN(aantal));
-
-        if (isEmptyRow) {
-          return;
-        }
-
         if (!artikelcode) {
           invalidRows.push({
             rowNumber: row.__rowNumber || "?",
-            reason: "Geen bruikbare code gevonden."
+            reason: "Geen bruikbare artikelcode gevonden."
           });
           return;
         }
 
         tickets.push({
           artikelcode,
+          omschrijving,
           prijs,
           aantal,
           qrText: artikelcode,
@@ -694,6 +708,7 @@
       fillMappingSelect(mapCode, state.headers, state.mapping.code);
       fillMappingSelect(mapPrice, state.headers, state.mapping.price);
       fillMappingSelect(mapQty, state.headers, state.mapping.quantity);
+      fillMappingSelect(mapDescription, state.headers, state.mapping.description);
 
       if (mappingPanel) mappingPanel.classList.remove("hidden");
       if (importTools) importTools.classList.remove("hidden");
@@ -790,7 +805,8 @@
       state.mapping = {
         code: mapCode ? mapCode.value : "",
         price: mapPrice ? mapPrice.value : "",
-        quantity: mapQty ? mapQty.value : ""
+        quantity: mapQty ? mapQty.value : "",
+        description: mapDescription ? mapDescription.value : ""
       };
 
       const result = buildTicketsFromRows(state.rawRows, state.mapping);
@@ -876,10 +892,10 @@
 
     function createTemplateFile() {
       const rows = [
-        ["artikelcode", "prijs", "aantal", "opmerking"],
-        ["SHOSTA-1141", 2.00, 3, "Standaard ticket"],
-        ["Museumpas", 0.00, 2, "Gratis toegang"],
-        ["Evenement-Avond", 5.50, 4, "Speciale sessie"]
+        ["OMSCHRIJVING", "ARTIKELCODE", "PRIJS", "HOEVEELHEID LABELS"],
+        ["Potlood - Voorbeeld", "SHOSTA-1141", 1.50, 2],
+        ["Balpen - Voorbeeld", "SHOSTA-1142", 2.00, 2],
+        ["Notitieboekje - Voorbeeld", "SHOSTA-1143", 3.50, 250]
       ];
 
       const worksheet = XLSX.utils.aoa_to_sheet(rows);
@@ -927,6 +943,7 @@
         tickets: [
           {
             artikelcode: code,
+            omschrijving: "",
             prijs: prijs,
             aantal: aantal,
             qrText: code,
@@ -945,7 +962,7 @@
       state.invalidRows = [];
       state.fileName = "";
       state.sheetName = "";
-      state.mapping = { code: "", price: "", quantity: "" };
+      state.mapping = { code: "", price: "", quantity: "", description: "" };
 
       searchInput.value = "";
       prijsInput.value = "2.00";
@@ -978,6 +995,7 @@
     if (mapCode) mapCode.addEventListener("change", rebuildImportedTickets);
     if (mapPrice) mapPrice.addEventListener("change", rebuildImportedTickets);
     if (mapQty) mapQty.addEventListener("change", rebuildImportedTickets);
+    if (mapDescription) mapDescription.addEventListener("change", rebuildImportedTickets);
 
     setStatus("Geen bestand geladen.", "neutral");
     updatePreview();
