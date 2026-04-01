@@ -656,4 +656,17 @@ input[type="file"] {
   .logo-card {
     height: 84px;
   }
+  #importCard,
+#importPreviewCard,
+#uploadStatus,
+#mappingPanel,
+#importTools,
+#importMetaBadge,
+#importFileName,
+#importSheetName,
+#importValidCount,
+#importInvalidCount,
+#importErrorsNote {
+  display: none !important;
+}
 }
