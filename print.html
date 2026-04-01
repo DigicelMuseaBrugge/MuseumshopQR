@@ -26,15 +26,15 @@ try {
   stored = null;
 }
 
-function truncateText(text, maxLength = 32) {
+function truncateText(text, maxLength = 18) {
   if (!text) return "";
   const str = String(text).trim();
-  return str.length > maxLength ? str.slice(0, maxLength - 1) + "…" : str;
+  return str.length > maxLength ? str.slice(0, maxLength) : str;
 }
 
 function formatPrice(value) {
   const amount = Number(value || 0);
-  return "€ " + amount.toFixed(2);
+  return "€" + amount.toFixed(2);
 }
 
 function createLabel(ticket) {
@@ -64,7 +64,7 @@ function createLabel(ticket) {
 
   const code = document.createElement("div");
   code.className = "code vertical-text";
-  code.textContent = truncateText(ticket.artikelcode, 32);
+  code.textContent = truncateText(ticket.artikelcode, 18);
   codeBox.appendChild(code);
 
   label.appendChild(qrBox);
