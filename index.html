@@ -225,7 +225,11 @@
         <h3>Hoe werkt het?</h3>
         <ul class="info-list">
           <li>Typ een tekst of artikelcode in of upload een Excel-bestand.</li>
-          <li>Het systeem probeert artikelcode, prijs en aantal automatisch te herkennen.</li>
+          <li>
+            Gebruik dit
+            <a href="Te genereren QR-Codes (2).xlsx" download class="template-link">bestand</a>
+            voor de juiste lay-out.
+          </li>
           <li>Controleer het overzicht.</li>
           <li>Druk op de knop om het ticket te genereren.</li>
         </ul>
@@ -894,7 +898,7 @@
         ["OMSCHRIJVING", "ARTIKELCODE", "PRIJS", "HOEVEELHEID LABELS"],
         ["Potlood - Voorbeeld", "SHOSTA-1141", 1.50, 2],
         ["Balpen - Voorbeeld", "SHOSTA-1142", 2.00, 2],
-        ["Notitieboekje - Voorbeeld", "SHOSTA-1143", 3.50, 250]
+        ["Notitieboekje - Voorbeeld", "SHOSTA-1143", 250, 3]
       ];
 
       const worksheet = XLSX.utils.aoa_to_sheet(rows);
