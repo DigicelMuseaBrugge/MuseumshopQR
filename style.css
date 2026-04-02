@@ -156,6 +156,16 @@ body {
   margin-bottom: 18px;
 }
 
+.template-link {
+  color: #c62828;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.template-link:hover {
+  color: #8e1d1d;
+}
+
 .hero-actions {
   display: flex;
   gap: 12px;
