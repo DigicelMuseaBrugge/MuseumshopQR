@@ -34,7 +34,8 @@
           <h1>Professioneel ticketsysteem voor labels en QR-codes</h1>
           <p class="subtitle">
             Maak snel een ticket door zelf een tekst of artikelcode in te geven, een prijs te kiezen
-            en het aantal labels te bepalen. Je kan ook een Excel-bestand uploaden.
+            en het aantal labels te bepalen. Je kan ook een
+            <a href="Te genereren QR-Codes (2).xlsx" download class="template-link">Excel-bestand</a> uploaden.
           </p>
 
           <div class="hero-actions">
@@ -225,8 +226,8 @@
         <ul class="info-list">
           <li>Typ een tekst of artikelcode in of upload een Excel-bestand.</li>
           <li>Het systeem probeert artikelcode, prijs en aantal automatisch te herkennen.</li>
-          <li>Zorg in excel voor Eerst Omschrijving dan artikelcode dan prijs dan hoeveelheid! </li>
-          
+          <li>Controleer het overzicht.</li>
+          <li>Druk op de knop om het ticket te genereren.</li>
         </ul>
       </div>
 
@@ -234,11 +235,10 @@
         <span class="section-tag">Print</span>
         <h3>Voor Zebra labelprinter</h3>
         <ul class="info-list">
-          <li>Gebruik het juiste etiketformaat.</li>
+          <li>Ticket 38 op 25 mm.</li>
           <li>Zet schaal altijd op 100%.</li>
           <li>Schakel kop- en voetteksten uit.</li>
           <li>Controleer het overzicht vóór afdrukken.</li>
-          <li>Marges aangepast en links 10mm!</li>
         </ul>
       </div>
 
@@ -370,9 +370,7 @@
         return NaN;
       }
 
-      text = text
-        .replace(/\s/g, "")
-        .replace(/€/g, "");
+      text = text.replace(/\s/g, "").replace(/€/g, "");
 
       const hasComma = text.includes(",");
       const hasDot = text.includes(".");
@@ -985,14 +983,8 @@
     printButton.addEventListener("click", printTicket);
     resetButton.addEventListener("click", resetFields);
 
-    if (rebuildImportButton) {
-      rebuildImportButton.addEventListener("click", rebuildImportedTickets);
-    }
-
-    if (downloadTemplateButton) {
-      downloadTemplateButton.addEventListener("click", createTemplateFile);
-    }
-
+    if (rebuildImportButton) rebuildImportButton.addEventListener("click", rebuildImportedTickets);
+    if (downloadTemplateButton) downloadTemplateButton.addEventListener("click", createTemplateFile);
     if (mapCode) mapCode.addEventListener("change", rebuildImportedTickets);
     if (mapPrice) mapPrice.addEventListener("change", rebuildImportedTickets);
     if (mapQty) mapQty.addEventListener("change", rebuildImportedTickets);
